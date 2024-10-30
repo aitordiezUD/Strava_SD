@@ -95,6 +95,38 @@ public class User {
         this.weight = weight;
     }
 
+    public List<Session> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(List<Session> sessions) {
+        this.sessions = sessions;
+    }
+
+    public List<Challenge> getChallenges() {
+        return challenges;
+    }
+
+    public void setChallenges(List<Challenge> challenges) {
+        this.challenges = challenges;
+    }
+
+    public void addSession(Session session) {
+        sessions.add(session);
+    }
+
+    public void removeSession(Session session) {
+        sessions.remove(session);
+    }
+
+    public void addChallenge(Challenge challenge) {
+        challenges.add(challenge);
+    }
+
+    public void removeChallenge(Challenge challenge) {
+        challenges.remove(challenge);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
