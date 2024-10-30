@@ -62,5 +62,4 @@ public class SessionsService {
         return sessionRepository;
     }
 
-
 }

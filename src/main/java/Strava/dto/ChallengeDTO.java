@@ -9,11 +9,12 @@ public class ChallengeDTO {
     private Double targetDistance;
     private Integer targetTime;
     private String sport;
+    private String userEmail;
 
     public ChallengeDTO() {
     }
 
-    public ChallengeDTO(String challengeId, String name, LocalDate startDate, LocalDate endDate, Double targetDistance, Integer targetTime, String sport) {
+    public ChallengeDTO(String challengeId, String name, LocalDate startDate, LocalDate endDate, Double targetDistance, Integer targetTime, String sport, String userEmail) {
         this.challengeId = challengeId;
         this.name = name;
         this.startDate = startDate;
@@ -21,9 +22,18 @@ public class ChallengeDTO {
         this.targetDistance = targetDistance;
         this.targetTime = targetTime;
         this.sport = sport;
+        this.userEmail = userEmail;
     }
 
     // Getters y setters
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
 
     public String getChallengeId() {
         return challengeId;

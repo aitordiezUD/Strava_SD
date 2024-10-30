@@ -2,8 +2,11 @@ package Strava.entity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Map;
+
 
 public class User {
     private String email;
@@ -15,7 +18,7 @@ public class User {
     private Integer restingHeartRate; // beats per minute
     private AuthProvider authProvider; // Enum: GOOGLE, FACEBOOK
     private List<Session> sessions = new ArrayList<>();
-    private List<Challenge> challenges = new ArrayList<>();
+    private Map<Challenge,Boolean> challenges = new HashMap<>();
 
     public User() {
     }
@@ -103,11 +106,11 @@ public class User {
         this.sessions = sessions;
     }
 
-    public List<Challenge> getChallenges() {
+    public Map<Challenge, Boolean> getChallenges() {
         return challenges;
     }
 
-    public void setChallenges(List<Challenge> challenges) {
+    public void setChallenges(Map<Challenge, Boolean> challenges) {
         this.challenges = challenges;
     }
 
@@ -119,8 +122,8 @@ public class User {
         sessions.remove(session);
     }
 
-    public void addChallenge(Challenge challenge) {
-        challenges.add(challenge);
+    public void addChallenge(Challenge challenge, Boolean achieved) {
+        challenges.put(challenge,achieved);
     }
 
     public void removeChallenge(Challenge challenge) {

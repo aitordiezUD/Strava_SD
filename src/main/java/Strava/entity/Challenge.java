@@ -1,9 +1,12 @@
 package Strava.entity;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class Challenge {
+    private static long counter = 0;
+
     private String challengeId;
     private String name;
     private LocalDate startDate;
@@ -11,18 +14,20 @@ public class Challenge {
     private Double targetDistance; // in kilometers (optional)
     private Integer targetTime; // in minutes (optional)
     private SportType sport;
+    private User user;
 
     public Challenge() {
     }
 
-    public Challenge(String challengeId, LocalDate endDate, String name, SportType sport, LocalDate startDate, Double targetDistance, Integer targetTime) {
-        this.challengeId = challengeId;
+    public Challenge(LocalDate endDate, String name, SportType sport, LocalDate startDate, Double targetDistance, Integer targetTime, User user) {
+        this.challengeId = generateID();
         this.endDate = endDate;
         this.name = name;
         this.sport = sport;
         this.startDate = startDate;
         this.targetDistance = targetDistance;
         this.targetTime = targetTime;
+        this.user = user;
     }
 
     public String getChallengeId() {
@@ -79,6 +84,19 @@ public class Challenge {
 
     public void setTargetTime(Integer targetTime) {
         this.targetTime = targetTime;
+    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public static synchronized String generateID() {
+        return Instant.now().toEpochMilli() + "-" + System.nanoTime() + "-" + (counter++);
     }
 
     @Override
