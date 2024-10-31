@@ -58,7 +58,7 @@ public class SessionsController {
             if (sessions.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            List<SessionDTO> sessionDTOs = new ArrayList<SessionDTO>();
+            List<SessionDTO> sessionDTOs = new ArrayList<>();
             for (Session session : sessions) {
                 sessionDTOs.add(new SessionDTO(session.getTitle(), session.getSport().toString(), session.getDistance(),
                         session.getStartDate(), session.getStartTime(), session.getDuration(), session.getUser().getEmail()));
