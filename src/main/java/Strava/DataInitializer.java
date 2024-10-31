@@ -71,7 +71,7 @@ public class DataInitializer {
 
 
             // Create some sessions
-            Session session1 = new Session(10.0, 60, SportType.RUNNING, LocalDate.parse("2024-07-24"), LocalTime.parse("06:00"), "Morning Run", user1);
+            Session session1 = new Session(10.0, 60, SportType.RUNNING, LocalDate.parse("2024-10-31"), LocalTime.parse("06:00"), "Morning Run", user1);
             Session session2 = new Session(25.0, 90, SportType.CYCLING, LocalDate.parse("2024-07-04"), LocalTime.parse("07:30"), "Cycling Session", user2);
             Session session3 = new Session(5.0, 30, SportType.RUNNING, LocalDate.parse("2021-10-31"), LocalTime.parse("18:00"), "Evening Jog", user3);
             Session session4 = new Session(15.0, 75, SportType.CYCLING, LocalDate.parse("2024-10-29"), LocalTime.parse("05:45"), "Early Ride", user4);

@@ -49,7 +49,7 @@ public class SessionsController {
         @RequestParam(name = "endDate",required = false) LocalDate endDate,
         @Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
         @RequestHeader("token") String token) {
-       try {
+        try {
             User user = authService.getUserByToken(token);
             if (user == null) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -68,7 +68,36 @@ public class SessionsController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
+    @Operation(
+        summary = "Create a new session",
+        description = "Allows a user to create a new session",
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Created: Session created successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad Request: Invalid data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: Invalid token"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+        }
+    )
+
+    @PostMapping("/session")
+    public  ResponseEntity<Void> createSession(
+        @Parameter(name = "session", description = "Session data", required = true)
+        @RequestBody SessionDTO sessionDTO,
+        @Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
+        @RequestHeader("token") String token) {
+        try {
+            User user = authService.getUserByToken(token);
+            if (user == null) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+            sessionsService.createSession(sessionDTO.getTitle(), sessionDTO.getSport(), sessionDTO.getDistance(),
+                    sessionDTO.getStartDate(), sessionDTO.getStartTime(), sessionDTO.getDuration(), user);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
