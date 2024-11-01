@@ -77,7 +77,6 @@ public class ChallengesService {
     }
 
 
-
     // Method to add challenge to the repository
     public void addChallenge(Challenge challenge) {
         if (challenge != null) {
@@ -87,5 +86,13 @@ public class ChallengesService {
 
     private void sendConfirmationEmail(User user, Challenge challenge) {
         // Logic to send email to user about the created challenge
+    }
+    
+    //Method to find challenges by id 
+    public Challenge findChallengeById(String challengeId) {
+    	return challengeRepository.stream()
+    			.filter(challenge -> challenge.getChallengeId().equals(challengeId))
+    			.findFirst()
+    			.orElse(null);
     }
 }
