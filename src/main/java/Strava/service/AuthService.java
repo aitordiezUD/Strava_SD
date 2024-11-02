@@ -25,7 +25,7 @@ public class AuthService {
     // Registration method that adds a new user to the repository
     // Includes the following basic information: email, name, birthdate;
     // and optionally: weight in kilograms, height in centimeters, maximum heart rate, heart rate at rest
-    public void register(String email,
+    public boolean register(String email,
                          String name,
                          LocalDate birthdate,
                          String authProviderStr,
@@ -41,7 +41,9 @@ public class AuthService {
 
         if (!userRepository.containsKey(user.getEmail()) && checkPassword(email,password, authProvider)) {
             userRepository.putIfAbsent(user.getEmail(), user);
+            return true;
         }
+        return false;
     }
 
     // Login method that checks if the user exists in the database and validates the password
