@@ -21,17 +21,28 @@ public class SessionsService {
                                  LocalTime startTime, int duration, User user) {
         SportType sportType = SportType.valueOf(sport.toUpperCase());
         Session session = new Session(distance, duration, sportType, startDate, startTime, title, user);
-        user.addSession(session);
-        addSession(session);
+        this.addSession(session);
     }
 
 //    Querying my training session: Each individual can view their completed training sessions. By default, only the
 //    last 5 sessions will be displayed, but it is possible to retrieve and view all sessions within a specified
 //    start and end date.
 
+    // Method to query the last all sessions of a user
+    public List<Session> queryAllSessions(User user) {
+        List<Session> sessions = new ArrayList<>();
+        for (Session session : sessionRepository) {
+            if (session.getUser().equals(user)) {
+                sessions.add(session);
+            }
+        }
+        return sessions;
+    }
+
+
     // Method to query the last 5 sessions of a user
     public List<Session> querySessions(User user, LocalDate startDate, LocalDate endDate) {
-        List<Session> sessions = user.getSessions();
+        List<Session> sessions = queryAllSessions(user);
         sessions.sort((s1, s2) -> s2.getStartDate().compareTo(s1.getStartDate()));
         if (startDate != null && endDate != null) {
             List<Session> filteredSessions = new ArrayList<>();
@@ -48,7 +59,6 @@ public class SessionsService {
             return sessions.subList(0,5);
         }
     }
-
 
     // Method to add a new session to the repository
     public void addSession(Session session) {

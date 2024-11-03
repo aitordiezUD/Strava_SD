@@ -15,6 +15,11 @@ public class ChallengesService {
 
     //Simulating challenge repository
     private static List<Challenge> challengeRepository = new ArrayList<>();
+    private final SessionsService sessionsService;
+
+    public ChallengesService(SessionsService sessionsService) {
+        this.sessionsService = sessionsService;
+    }
 
     // Method to create a new challenge
     public void createChallenge(String name, LocalDate startDate, LocalDate endDate,
@@ -30,16 +35,17 @@ public class ChallengesService {
         List<Challenge> activeChallenges = new ArrayList<>(challengeRepository);
         if (startDate != null && endDate != null) { // Filter by start and end date
             activeChallenges.removeIf(challenge -> challenge.getEndDate().isBefore(startDate) || challenge.getStartDate().isAfter(endDate));
-            return activeChallenges;
-        } else if (sport != null) { // Filter by sport
-            activeChallenges.removeIf(challenge -> !challenge.getSport().equals(sport));
-            return activeChallenges;
         } else{
             LocalDate today = LocalDate.now(); // Get the current date
             activeChallenges.removeIf(challenge -> challenge.getEndDate().isBefore(today) || challenge.getStartDate().isAfter(today));
             activeChallenges.sort((c1, c2) -> c2.getEndDate().compareTo(c1.getEndDate()));
             return activeChallenges.subList(0,5);
         }
+        if (sport != null) {
+            activeChallenges.removeIf(challenge -> challenge.getSport() != sport);
+        }
+        return activeChallenges;
+
     }
 
     // Method to accept a challenge
@@ -55,7 +61,7 @@ public class ChallengesService {
     public boolean checkChallengeCompletion(User user, Challenge challenge) {
         LocalDate startDate = challenge.getStartDate();
         LocalDate endDate = challenge.getEndDate();
-        List<Session> sessions = user.getSessions();
+        List<Session> sessions = sessionsService.queryAllSessions(user);
         for (Session session : sessions) {
             if (session.getStartDate().isAfter(startDate) && session.getStartDate().isBefore(endDate)) {
                 if (challenge.getTargetDistance() != null && session.getDistance() >= challenge.getTargetDistance()

@@ -17,7 +17,6 @@ public class User {
     private Integer maxHeartRate; // beats per minute
     private Integer restingHeartRate; // beats per minute
     private AuthProvider authProvider; // Enum: GOOGLE, FACEBOOK
-    private List<Session> sessions = new ArrayList<>();
     private Map<Challenge,Boolean> challenges = new HashMap<>();
 
     public User() {
@@ -98,28 +97,12 @@ public class User {
         this.weight = weight;
     }
 
-    public List<Session> getSessions() {
-        return sessions;
-    }
-
-    public void setSessions(List<Session> sessions) {
-        this.sessions = sessions;
-    }
-
     public Map<Challenge, Boolean> getChallenges() {
         return challenges;
     }
 
     public void setChallenges(Map<Challenge, Boolean> challenges) {
         this.challenges = challenges;
-    }
-
-    public void addSession(Session session) {
-        sessions.add(session);
-    }
-
-    public void removeSession(Session session) {
-        sessions.remove(session);
     }
 
     public void addChallenge(Challenge challenge, Boolean achieved) {

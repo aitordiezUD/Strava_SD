@@ -55,39 +55,25 @@ public class DataInitializer {
 
 
             // Create some challenges
-            Challenge challenge1 = new Challenge(LocalDate.parse("2024-12-31"), "Marathon Training", SportType.RUNNING, LocalDate.parse("2024-01-01"), 42.195, 240, user1);
-            Challenge challenge2 = new Challenge(LocalDate.parse("2024-06-30"), "Cycling Challenge", SportType.CYCLING, LocalDate.parse("2024-03-01"), 100.0, 300, user2);
-            Challenge challenge3 = new Challenge(LocalDate.parse("2024-09-15"), "Swimming Sprint", SportType.RUNNING, LocalDate.parse("2024-07-01"), 1.5, 30, user3);
-            Challenge challenge4 = new Challenge(LocalDate.parse("2024-11-01"), "Triathlon Prep", SportType.CYCLING, LocalDate.parse("2024-05-01"), 51.5, 180, user4);
-            Challenge challenge5 = new Challenge(LocalDate.parse("2024-08-20"), "Hiking Adventure", SportType.RUNNING, LocalDate.parse("2024-06-01"), 20.0, 240, user5);
-
-            challengesService.addChallenge(challenge1);
-            challengesService.addChallenge(challenge2);
-            challengesService.addChallenge(challenge3);
-            challengesService.addChallenge(challenge4);
-            challengesService.addChallenge(challenge5);
+            challengesService.createChallenge("Marathon Training", LocalDate.parse("2024-01-01"), LocalDate.parse("2024-12-31"), 42.195, 240, SportType.RUNNING, user1);
+            challengesService.createChallenge("Cycling Challenge", LocalDate.parse("2024-03-01"), LocalDate.parse("2024-06-30"), 100.0, 300, SportType.CYCLING, user2);
+            challengesService.createChallenge("Swimming Sprint", LocalDate.parse("2024-07-01"), LocalDate.parse("2024-09-15"), 1.5, 30, SportType.RUNNING, user3);
+            challengesService.createChallenge("Triathlon Prep", LocalDate.parse("2024-05-01"), LocalDate.parse("2024-11-01"), 51.5, 180, SportType.CYCLING, user4);
+            challengesService.createChallenge("Hiking Adventure", LocalDate.parse("2024-06-01"), LocalDate.parse("2024-08-20"), 20.0, 240, SportType.RUNNING, user5);
+            challengesService.createChallenge("Cycling Tour", LocalDate.parse("2024-07-01"), LocalDate.parse("2024-09-30"), 200.0, 600, SportType.CYCLING, user6);
 
             logger.info("Challenges saved!");
 
 
             // Create some sessions
-            Session session1 = new Session(10.0, 60, SportType.RUNNING, LocalDate.parse("2024-10-31"), LocalTime.parse("06:00"), "Morning Run", user1);
-            Session session2 = new Session(25.0, 90, SportType.CYCLING, LocalDate.parse("2024-07-04"), LocalTime.parse("07:30"), "Cycling Session", user2);
-            Session session3 = new Session(5.0, 30, SportType.RUNNING, LocalDate.parse("2021-10-31"), LocalTime.parse("18:00"), "Evening Jog", user3);
-            Session session4 = new Session(15.0, 75, SportType.CYCLING, LocalDate.parse("2024-10-29"), LocalTime.parse("05:45"), "Early Ride", user4);
-            Session session5 = new Session(8.0, 45, SportType.RUNNING, LocalDate.parse("2023-10-15"), LocalTime.parse("19:00"), "Night Run", user5);
-            Session session6 = new Session(12.0, 70, SportType.RUNNING, LocalDate.parse("2024-08-01"), LocalTime.parse("06:30"), "Morning Run", user6);
-            Session session7 = new Session(30.0, 120, SportType.CYCLING, LocalDate.parse("2024-08-02"), LocalTime.parse("08:00"), "Long Ride", user7);
-            Session session8 = new Session(7.0, 40, SportType.RUNNING, LocalDate.parse("2024-08-03"), LocalTime.parse("19:30"), "Evening Run", user8);
-
-            sessionsService.addSession(session1);
-            sessionsService.addSession(session2);
-            sessionsService.addSession(session3);
-            sessionsService.addSession(session4);
-            sessionsService.addSession(session5);
-            sessionsService.addSession(session6);
-            sessionsService.addSession(session7);
-            sessionsService.addSession(session8);
+            sessionsService.createSession("Morning Run", "RUNNING", 10.0, LocalDate.parse("2024-10-31"), LocalTime.parse("06:00"), 60, user1);
+            sessionsService.createSession("Cycling Session", "CYCLING", 25.0, LocalDate.parse("2024-07-04"), LocalTime.parse("07:30"), 90, user2);
+            sessionsService.createSession("Evening Jog", "RUNNING", 5.0, LocalDate.parse("2021-10-31"), LocalTime.parse("18:00"), 30, user3);
+            sessionsService.createSession("Early Ride", "CYCLING", 15.0, LocalDate.parse("2024-10-29"), LocalTime.parse("05:45"), 75, user4);
+            sessionsService.createSession("Night Run", "RUNNING", 8.0, LocalDate.parse("2023-10-15"), LocalTime.parse("19:00"), 45, user5);
+            sessionsService.createSession("Morning Run", "RUNNING", 12.0, LocalDate.parse("2024-08-01"), LocalTime.parse("06:30"), 70, user6);
+            sessionsService.createSession("Long Ride", "CYCLING", 30.0, LocalDate.parse("2024-08-02"), LocalTime.parse("08:00"), 120, user7);
+            sessionsService.createSession("Evening Run", "RUNNING", 7.0, LocalDate.parse("2024-08-03"), LocalTime.parse("19:30"), 40, user8);
 
             logger.info("Sessions saved!");
         };

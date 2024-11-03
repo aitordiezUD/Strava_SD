@@ -32,9 +32,14 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/challenges")
 public class ChallengesController{
-	@Autowired
-	private ChallengesService challengesService; 
-	private AuthService authService;
+
+	private final ChallengesService challengesService;
+	private final AuthService authService;
+
+	public ChallengesController(ChallengesService challengesService, AuthService authService) {
+		this.challengesService = challengesService;
+		this.authService = authService;
+	}
 	
 	// CREATE CHALLENGE 
 	
@@ -93,31 +98,30 @@ public class ChallengesController{
 	   
 	@GetMapping("/active")
 	 public ResponseEntity<List<ChallengeDTO>> downloadActiveChallenges(
-		        @RequestHeader("token") 
-		        @Parameter(description = "Authorization token", required = true, example = "172778798774") String token,
 		        @Parameter(name = "startDate", description = "Start date to filter the challenges", example = "2021-01-01")
 		        @RequestParam(name = "startDate", required = false) LocalDate startDate,
 		        @Parameter(name = "endDate", description = "End date to filter the challenges", example = "2021-12-31")
 		        @RequestParam(name = "endDate", required = false) LocalDate endDate,
 		        @Parameter(name = "sportType", description = "Type of sport to filter the challenges", example = "SOCCER")
-		        @RequestParam(name = "sportType", required = false) SportType sportType) {
+		        @RequestParam(name = "sportType", required = false) String sport,
+				@Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
+				@RequestHeader("token") String token) {
 
 		    try {
 		        User user = authService.getUserByToken(token);
 		        if (user == null) {
 		            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		        }
-
-		        List<Challenge> activeChallenges = challengesService.downloadActiveChallenges(startDate, endDate, sportType);
+				SportType sport_Type = SportType.valueOf(sport.toUpperCase());
+				List<Challenge> activeChallenges = challengesService.downloadActiveChallenges(startDate, endDate, sport_Type);
 		        if (activeChallenges.isEmpty()) {
 		            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		        }
 
 		        List<ChallengeDTO> challengeDTOs = new ArrayList<>();
 		        for (Challenge challenge : activeChallenges) {
-		            challengeDTOs.add(new ChallengeDTO(challenge.getChallengeId(), challenge.getName(), challenge.getStartDate(), challenge.getEndDate(), challenge.getTargetDistance(), challenge.getTargetTime(), challenge.getSport().toString(), challenge.getUser().getEmail()
-		            	));
-		            }
+		            challengeDTOs.add(new ChallengeDTO(challenge.getChallengeId(), challenge.getName(), challenge.getStartDate(), challenge.getEndDate(), challenge.getTargetDistance(), challenge.getTargetTime(), challenge.getSport().toString(), challenge.getUser().getEmail()));
+				}
 
 		        return new ResponseEntity<>(challengeDTOs, HttpStatus.OK);
 
