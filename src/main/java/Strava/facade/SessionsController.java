@@ -5,6 +5,8 @@ import Strava.service.AuthService;
 import Strava.service.SessionsService;
 import Strava.dto.SessionDTO;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,7 @@ import java.util.List;
 @RequestMapping("/session")
 public class SessionsController {
 
+    private static final Logger log = LoggerFactory.getLogger(SessionsController.class);
     private final SessionsService sessionsService;
     private final AuthService authService;
 
@@ -50,8 +53,9 @@ public class SessionsController {
         @Parameter(name = "endDate", description = "End date to filter the sessions", example = "2021-12-31")
         @RequestParam(name = "endDate",required = false) LocalDate endDate,
         @Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
-        @RequestHeader("token") String token) {
+        @RequestBody String token) {
         try {
+            log.info("token: " + token);
             User user = authService.getUserByToken(token);
             if (user == null) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -88,8 +92,9 @@ public class SessionsController {
         @Parameter(name = "session", description = "Session data", required = true)
         @RequestBody SessionDTO sessionDTO,
         @Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
-        @RequestHeader("token") String token) {
+        @RequestHeader String token) {
         try {
+            System.out.println("token: " + token);
             User user = authService.getUserByToken(token);
             if (user == null) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

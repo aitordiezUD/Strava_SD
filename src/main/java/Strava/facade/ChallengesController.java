@@ -56,7 +56,7 @@ public class ChallengesController{
 	
 	@PostMapping
 	public ResponseEntity<Void> createChallenge(
-			@Parameter(name = "session", description = "Session data", required = true)
+			@Parameter(name = "challenge", description = "challenge data", required = true)
 			@RequestBody ChallengeDTO challengeDTO,
 			@Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
 			@RequestHeader("token") String token)
@@ -95,7 +95,7 @@ public class ChallengesController{
 		        @Parameter(name = "sportType", description = "Type of sport to filter the challenges", example = "RUNNING")
 		        @RequestParam(name = "sportType", required = false) String sport,
 				@Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
-				@RequestHeader("token") String token) {
+				@RequestBody String token) {
 
 		    try {
 		        User user = authService.getUserByToken(token);
@@ -138,8 +138,10 @@ public class ChallengesController{
 	
 	@PostMapping ("/accept")
 	public ResponseEntity<?>acceptChallenge(
-			@RequestHeader("token") @Parameter(description = "Authorization token", required = true, example = "172778798774") String token,
-            @RequestBody String challengeId){
+			@Parameter(description = "Authorization token", required = true, example = "172778798774")
+			@RequestBody String token,
+			@Parameter(description = "Challenge ID", required = true, example = "123456")
+            @RequestParam String challengeId){
 		
 		User user = authService.getUserByToken(token);
 		if(user== null) {
@@ -169,8 +171,8 @@ public class ChallengesController{
 	 
 	@GetMapping("/accepted")
 	public ResponseEntity<List<ChallengeDTO>>queryAcceptedChallenges(
-			@RequestHeader("token")
-	 		@Parameter(description= "Authorization token", required = true, example = "172778789774")String token){
+	 		@Parameter(description= "Authorization token", required = true, example = "172778789774")
+			@RequestBody String token){
 		try {
 			User user = authService.getUserByToken(token); 
 			if(user==null) {
