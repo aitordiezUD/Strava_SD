@@ -49,7 +49,6 @@ public class AuthService {
     // Login method that checks if the user exists in the database and validates the password
     public Optional<String> login(String email, String password) {
         User user = userRepository.get(email);
-
         if (user != null && checkPassword(email,password, user.getAuthProvider())) {
             String token = generateToken();  // Generate a random token for the session
             tokenStore.put(token, user);     // Store the token and associate it with the user

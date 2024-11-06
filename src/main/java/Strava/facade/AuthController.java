@@ -2,16 +2,16 @@ package Strava.facade;
 import Strava.dto.CredentialsDTO;
 import Strava.dto.RegisterRequestDTO;
 import Strava.service.AuthService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.Optional;
 
@@ -20,7 +20,6 @@ import java.util.Optional;
 @RequestMapping("/auth")
 @Tag(name = "Authorization Controller", description = "Login, logout and register operations.")
 public class AuthController {
-
     private AuthService authService;
 
     public AuthController(AuthService authService) {this.authService = authService;}
@@ -76,10 +75,10 @@ public class AuthController {
             summary = "Register in the system",
             description = "Allows the register in the system by providing details.",
             responses =
-            {
-                    @ApiResponse(responseCode = "201", description = "Successful registration"),
-                    @ApiResponse(responseCode = "400", description = "Bad request")
-            }
+                    {
+                            @ApiResponse(responseCode = "201", description = "Successful registration"),
+                            @ApiResponse(responseCode = "400", description = "Bad request")
+                    }
     )
     @PostMapping("/register")
     public ResponseEntity<Void> register(
