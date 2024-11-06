@@ -96,10 +96,6 @@ public class AuthService {
         return tokenStore.get(token);
     }
 
-    // Method to get the user based on the email
-    public User getUserByEmail(String email) {
-        return userRepository.get(email);
-    }
 
     // Synchronized method to guarantee unique token generation
     private static synchronized String generateToken() {

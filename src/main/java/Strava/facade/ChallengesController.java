@@ -55,31 +55,21 @@ public class ChallengesController{
 		)
 	
 	@PostMapping
-	public ResponseEntity<?> createChallenge(
-			@Parameter(description = "Authorization token", required = true, example = "172778798774")
-			@RequestBody ChallengeDTO challengeDto,
-			@RequestHeader("token") String token, 
-			@Parameter(description = "Name of the challenge", required = true, example = "Marathon Challenge")
-			@RequestParam("name") String name, 
-			@Parameter(description = "Start date of the challenge", required = true, example = "2023-01-01")
-			@RequestParam("star_date") LocalDate startDate, 
-			@Parameter(description = "End date of the challenge", required = true, example = "2023-12-31")
-			@RequestParam("end_date") LocalDate endDate, 
-			@Parameter(description = "Target distance for the challenge", example = "42")
-			@RequestParam(value= "target_distance", required = false) Double targetDistance,
-			@Parameter(description = "Target time for the challenge in seconds", example = "3600")
-			@RequestParam( value = "target_time", required = false) Integer targetTime, 
-			@Parameter(description = "Sport type for the challenge", required = true, example = "RUNNING")
-			@RequestParam("sport") SportType sport){
+	public ResponseEntity<Void> createChallenge(
+			@Parameter(name = "session", description = "Session data", required = true)
+			@RequestBody ChallengeDTO challengeDTO,
+			@Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
+			@RequestHeader("token") String token)
+	{
 		
 			User creator = authService.getUserByToken(token);
 			if(creator == null) {
-				return ResponseEntity.status(403).body("Invalid Token");
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 			}
-			
-			challengesService.createChallenge(name, startDate, endDate, targetDistance, targetTime, sport, creator);	
-			return ResponseEntity.ok("Challenge created succesfully");
-		
+
+			challengesService.createChallenge(challengeDTO.getName(), challengeDTO.getStartDate(), challengeDTO.getEndDate(), challengeDTO.getTargetDistance(),
+					challengeDTO.getTargetTime(), challengeDTO.getSportType(), creator);
+			return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
 
@@ -102,7 +92,7 @@ public class ChallengesController{
 		        @RequestParam(name = "startDate", required = false) LocalDate startDate,
 		        @Parameter(name = "endDate", description = "End date to filter the challenges", example = "2021-12-31")
 		        @RequestParam(name = "endDate", required = false) LocalDate endDate,
-		        @Parameter(name = "sportType", description = "Type of sport to filter the challenges", example = "SOCCER")
+		        @Parameter(name = "sportType", description = "Type of sport to filter the challenges", example = "RUNNING")
 		        @RequestParam(name = "sportType", required = false) String sport,
 				@Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
 				@RequestHeader("token") String token) {
@@ -133,7 +123,7 @@ public class ChallengesController{
 	
 	
 	
-	// ACEPT CHALLENGE 
+	// ACCEPT CHALLENGE
 	@Operation(
 	        
 			summary = "Accept a challenge",
@@ -158,7 +148,7 @@ public class ChallengesController{
 		
 		Challenge challenge = challengesService.findChallengeById(challengeId);
 		if(challenge == null) {
-			return ResponseEntity.status(404).body("Chalenge not found");
+			return ResponseEntity.status(404).body("Challenge not found");
 		}
 		
 		challengesService.acceptChallenge(user, challenge);
@@ -180,7 +170,7 @@ public class ChallengesController{
 	@GetMapping("/accepted")
 	public ResponseEntity<List<ChallengeDTO>>queryAcceptedChallenges(
 			@RequestHeader("token")
-	 		@Parameter(description= "Authorization toke", required = true, example = "172778789774")String token){
+	 		@Parameter(description= "Authorization token", required = true, example = "172778789774")String token){
 		try {
 			User user = authService.getUserByToken(token); 
 			if(user==null) {
@@ -203,6 +193,8 @@ public class ChallengesController{
 		}
 		
 	}
+
+
 		
 	
 }
