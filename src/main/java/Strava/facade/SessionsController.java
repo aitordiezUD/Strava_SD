@@ -55,7 +55,6 @@ public class SessionsController {
         @Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
         @RequestBody String token) {
         try {
-            log.info("token: " + token);
             User user = authService.getUserByToken(token);
             if (user == null) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -94,7 +93,6 @@ public class SessionsController {
         @Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
         @RequestHeader String token) {
         try {
-            System.out.println("token: " + token);
             User user = authService.getUserByToken(token);
             if (user == null) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
