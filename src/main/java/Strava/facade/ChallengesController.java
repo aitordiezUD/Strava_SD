@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 import Strava.service.AuthService;
 import Strava.service.ChallengesService;
@@ -22,11 +24,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @RestController
@@ -102,8 +104,14 @@ public class ChallengesController{
 		        if (user == null) {
 		            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		        }
-				SportType sport_Type = SportType.valueOf(sport.toUpperCase());
-				List<Challenge> activeChallenges = challengesService.downloadActiveChallenges(startDate, endDate, sport_Type);
+				List<Challenge> activeChallenges;
+				if(sport != null) {
+					SportType sport_Type = SportType.valueOf(sport.toUpperCase());
+					activeChallenges = challengesService.downloadActiveChallenges(startDate, endDate, sport_Type);
+				} else {
+					activeChallenges = challengesService.downloadActiveChallenges(startDate, endDate, null);
+				}
+
 		        if (activeChallenges.isEmpty()) {
 		            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		        }
@@ -116,6 +124,7 @@ public class ChallengesController{
 		        return new ResponseEntity<>(challengeDTOs, HttpStatus.OK);
 
 		    } catch (Exception e) {
+				System.out.println("Error" + e);
 		        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		    }
 		}

@@ -39,7 +39,8 @@ public class ChallengesService {
             LocalDate today = LocalDate.now(); // Get the current date
             activeChallenges.removeIf(challenge -> challenge.getEndDate().isBefore(today) || challenge.getStartDate().isAfter(today));
             activeChallenges.sort((c1, c2) -> c2.getEndDate().compareTo(c1.getEndDate()));
-            return activeChallenges.subList(0,5);
+            int size = Math.min(activeChallenges.size(), 5);
+            return activeChallenges.subList(0, size);
         }
         if (sport != null) {
             activeChallenges.removeIf(challenge -> challenge.getSport() != sport);
