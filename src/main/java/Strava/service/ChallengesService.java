@@ -56,6 +56,7 @@ public class ChallengesService {
         }
         boolean status = checkChallengeCompletion(user, challenge);
         user.addChallenge(challenge, status);
+        challenge.addParticipant(user);
     }
 
     // Method to check if the challenge is completed

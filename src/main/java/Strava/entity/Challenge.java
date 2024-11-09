@@ -2,6 +2,8 @@ package Strava.entity;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Challenge {
@@ -15,6 +17,7 @@ public class Challenge {
     private Integer targetTime; // in minutes (optional)
     private SportType sport;
     private User user;
+    private List<User> participants;
 
     public Challenge() {
     }
@@ -28,6 +31,7 @@ public class Challenge {
         this.targetDistance = targetDistance;
         this.targetTime = targetTime;
         this.user = user;
+        this.participants = new ArrayList<User>();
     }
 
     public String getChallengeId() {
@@ -93,6 +97,18 @@ public class Challenge {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<User> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<User> participants) {
+        this.participants = participants;
+    }
+
+    public void addParticipant(User user) {
+        this.participants.add(user);
     }
 
     public static synchronized String generateID() {

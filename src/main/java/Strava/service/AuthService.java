@@ -49,7 +49,7 @@ public class AuthService {
     // Login method that checks if the user exists in the database and validates the password
     public Optional<String> login(String email, String password) {
         User user = userRepository.get(email);
-        if (user != null && checkPassword(email,password, user.getAuthProvider())) {
+        if (user != null && checkUserExists(email, user.getAuthProvider())) {
             String token = generateToken();  // Generate a random token for the session
             tokenStore.put(token, user);     // Store the token and associate it with the user
 
@@ -86,6 +86,16 @@ public class AuthService {
             return googleUsers.get(email).equals(password);
         } else if (authProvider == AuthProvider.FACEBOOK) {
             return facebookUsers.get(email).equals(password);
+        } else {
+            return false;
+        }
+    }
+
+    private boolean checkUserExists(String email, AuthProvider authProvider) {
+        if (authProvider == AuthProvider.GOOGLE) {
+            return googleUsers.containsKey(email);
+        } else if (authProvider == AuthProvider.FACEBOOK) {
+            return facebookUsers.containsKey(email);
         } else {
             return false;
         }
