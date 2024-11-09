@@ -83,22 +83,38 @@ public class AuthService {
     // Method to check the password based on the authentication provider
     private boolean checkPassword(String email, String password, AuthProvider authProvider) {
         if (authProvider == AuthProvider.GOOGLE) {
-            return googleUsers.get(email).equals(password);
+            return checkPasswordGoogle(email, password);
         } else if (authProvider == AuthProvider.FACEBOOK) {
-            return facebookUsers.get(email).equals(password);
+            return checkPasswordFacebook(email, password);
         } else {
             return false;
         }
     }
 
+    private boolean checkPasswordGoogle(String email, String password) {
+        return googleUsers.get(email).equals(password);
+    }
+
+    private boolean checkPasswordFacebook(String email, String password) {
+        return facebookUsers.get(email).equals(password);
+    }
+
     private boolean checkUserExists(String email, AuthProvider authProvider) {
         if (authProvider == AuthProvider.GOOGLE) {
-            return googleUsers.containsKey(email);
+            return checkUserExistsGoogle(email);
         } else if (authProvider == AuthProvider.FACEBOOK) {
-            return facebookUsers.containsKey(email);
+            return checkUserExistsFacebook(email);
         } else {
             return false;
         }
+    }
+
+    private boolean checkUserExistsGoogle(String email) {
+        return googleUsers.containsKey(email);
+    }
+
+    private boolean checkUserExistsFacebook(String email) {
+        return facebookUsers.containsKey(email);
     }
 
     // Method to get the user based on the token

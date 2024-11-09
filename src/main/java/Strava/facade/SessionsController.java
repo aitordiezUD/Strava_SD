@@ -65,8 +65,7 @@ public class SessionsController {
             }
             List<SessionDTO> sessionDTOs = new ArrayList<>();
             for (Session session : sessions) {
-                sessionDTOs.add(new SessionDTO(session.getTitle(), session.getSport().toString(), session.getDistance(),
-                        session.getStartDate(), session.getStartTime(), session.getDuration(), session.getUser().getEmail()));
+                sessionDTOs.add(sessionToDTO(session));
             }
             return new ResponseEntity<>(sessionDTOs, HttpStatus.OK);
 
@@ -103,6 +102,11 @@ public class SessionsController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public SessionDTO sessionToDTO(Session session) {
+        return new SessionDTO(session.getTitle(), session.getSport().toString(), session.getDistance(),
+                session.getStartDate(), session.getStartTime(), session.getDuration(), session.getUser().getEmail());
     }
 
 }
