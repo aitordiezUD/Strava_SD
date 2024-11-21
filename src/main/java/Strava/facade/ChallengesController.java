@@ -56,8 +56,7 @@ public class ChallengesController {
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
-
-    @PostMapping
+    @PostMapping("/challenge")
     public ResponseEntity<Void> createChallenge(
             @Parameter(name = "challenge", description = "Challenge data", required = true)
             @RequestBody ChallengeCreationDTO challengeCreationDTO,

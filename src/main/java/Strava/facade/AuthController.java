@@ -85,7 +85,7 @@ public class AuthController {
             @Parameter(name = "registerRequest", description = "User's register details", required = true)
             @RequestBody RegisterRequestDTO registerRequest
     ){
-        if (authService.register(registerRequest.getEmail(), registerRequest.getName(), registerRequest.getBirthday(), registerRequest.getAuthProviderStr(), registerRequest.getPassword(),
+        if (authService.register(registerRequest.getEmail(), registerRequest.getName(), registerRequest.getBirthday(), registerRequest.getAuthProviderStr(),
                 registerRequest.getWeight(), registerRequest.getHeight(), registerRequest.getMaxHeartRate(), registerRequest.getRestingHeartRate()))
         {return new ResponseEntity<>(HttpStatus.CREATED);}else {return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
 

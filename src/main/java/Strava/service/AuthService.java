@@ -2,6 +2,8 @@ package Strava.service;
 
 import Strava.entity.AuthProvider;
 import Strava.entity.User;
+import Strava.gateway.AuthGatewayFactory;
+import Strava.gateway.IAuthGateway;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,6 +24,9 @@ public class AuthService {
     // Simulate the users registered in Facebook
     private static Map<String,String> facebookUsers = new HashMap<>();
 
+    private static final IAuthGateway facebookGateway = AuthGatewayFactory.getInstance().createAuthGateway(AuthProvider.FACEBOOK);
+
+
     // Registration method that adds a new user to the repository
     // Includes the following basic information: email, name, birthdate;
     // and optionally: weight in kilograms, height in centimeters, maximum heart rate, heart rate at rest
@@ -29,7 +34,6 @@ public class AuthService {
                          String name,
                          LocalDate birthdate,
                          String authProviderStr,
-                         String password,
                          Double weight,
                          Double height,
                          Integer maxHeartRate,
@@ -39,7 +43,7 @@ public class AuthService {
 
         User user = new User(authProvider, birthdate, email, height, maxHeartRate, name, restingHeartRate, weight);
 
-        if (!userRepository.containsKey(user.getEmail()) && checkPassword(email,password, authProvider)) {
+        if (!userRepository.containsKey(user.getEmail()) && checkUserExists(email, authProvider)) {
             userRepository.putIfAbsent(user.getEmail(), user);
             return true;
         }
@@ -49,10 +53,9 @@ public class AuthService {
     // Login method that checks if the user exists in the database and validates the password
     public Optional<String> login(String email, String password) {
         User user = userRepository.get(email);
-        if (user != null && checkUserExists(email, user.getAuthProvider())) {
+        if (user != null && checkPassword(email, password , user.getAuthProvider())) {
             String token = generateToken();  // Generate a random token for the session
             tokenStore.put(token, user);     // Store the token and associate it with the user
-
             return Optional.of(token);
         } else {
             return Optional.empty();
@@ -96,7 +99,7 @@ public class AuthService {
     }
 
     private boolean checkPasswordFacebook(String email, String password) {
-        return facebookUsers.get(email).equals(password);
+        return facebookGateway.userAuth(email, password);
     }
 
     private boolean checkUserExists(String email, AuthProvider authProvider) {
@@ -114,7 +117,7 @@ public class AuthService {
     }
 
     private boolean checkUserExistsFacebook(String email) {
-        return facebookUsers.containsKey(email);
+        return facebookGateway.checkUserExists(email);
     }
 
     // Method to get the user based on the token

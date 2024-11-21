@@ -10,7 +10,6 @@ public class RegisterRequestDTO {
     private String email;
     private LocalDate birthday;
     private String authProviderStr;
-    private String password;
     private double weight;
     private double height;
     private Integer maxHeartRate;
@@ -28,9 +27,6 @@ public class RegisterRequestDTO {
 
     public String getAuthProviderStr(){return authProviderStr;}
     public void setAuthProviderStr(String authProviderStr){this.authProviderStr = authProviderStr;}
-
-    public String getPassword(){return password;}
-    public void setPassword(String password){this.password = password;}
 
     public double getWeight(){return weight;}
     public void setWeight(double weight){this.weight = weight;}
