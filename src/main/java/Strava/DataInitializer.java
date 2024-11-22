@@ -30,15 +30,10 @@ public class DataInitializer {
             User user3 = new User(AuthProvider.FACEBOOK, LocalDate.parse("2002-10-31"), "user3@opendeusto.es", 1.80, 210, "user03", 60, 70.0);
             User user4 = new User(AuthProvider.GOOGLE, LocalDate.parse("2001-07-31"), "user4@opendeusto.es", 1.75, 190, "user04", 55, 65.0);
 
-            authService.addUserGoogle(user1.getEmail(), "user1");
             authService.register(user1.getEmail(), user1.getName(), user1.getBirthdate(), user1.getAuthProvider().toString(), user1.getWeight(), user1.getHeight(), user1.getMaxHeartRate(), user1.getRestingHeartRate());
             authService.register(user2.getEmail(), user2.getName(), user2.getBirthdate(), user2.getAuthProvider().toString(), user2.getWeight(), user2.getHeight(), user2.getMaxHeartRate(), user2.getRestingHeartRate());
             authService.register(user3.getEmail(), user3.getName(), user3.getBirthdate(), user3.getAuthProvider().toString(), user3.getWeight(), user3.getHeight(), user3.getMaxHeartRate(), user3.getRestingHeartRate());
-            authService.addUserGoogle(user4.getEmail(), "user4");
             authService.register(user4.getEmail(), user4.getName(), user4.getBirthdate(), user4.getAuthProvider().toString(), user4.getWeight(), user4.getHeight(), user4.getMaxHeartRate(), user4.getRestingHeartRate());
-
-            authService.addUserGoogle("user5@google.com", "user5");
-            authService.addUserGoogle("user6@facebook.com", "user6");
 
             logger.info("Users saved!");
 

@@ -26,6 +26,7 @@ public class AuthService {
 
     private static final IAuthGateway facebookGateway = AuthGatewayFactory.getInstance().createAuthGateway(AuthProvider.FACEBOOK);
 
+    private static final IAuthGateway googleGateway = AuthGatewayFactory.getInstance().createAuthGateway(AuthProvider.GOOGLE);
 
     // Registration method that adds a new user to the repository
     // Includes the following basic information: email, name, birthdate;
@@ -95,7 +96,8 @@ public class AuthService {
     }
 
     private boolean checkPasswordGoogle(String email, String password) {
-        return googleUsers.get(email).equals(password);
+//        return googleUsers.get(email).equals(password);
+        return googleGateway.userAuth(email, password);
     }
 
     private boolean checkPasswordFacebook(String email, String password) {
@@ -113,7 +115,8 @@ public class AuthService {
     }
 
     private boolean checkUserExistsGoogle(String email) {
-        return googleUsers.containsKey(email);
+//        return googleUsers.containsKey(email);
+        return googleGateway.checkUserExists(email);
     }
 
     private boolean checkUserExistsFacebook(String email) {
