@@ -1,5 +1,6 @@
 package Strava.service;
 
+import Strava.dao.ChallengeRepository;
 import Strava.entity.Challenge;
 import Strava.entity.Session;
 import Strava.entity.SportType;
@@ -14,11 +15,13 @@ import java.util.List;
 public class ChallengesService {
 
     //Simulating challenge repository
-    private static List<Challenge> challengeRepository = new ArrayList<>();
+    private final ChallengeRepository challengeRepository;
     private final SessionsService sessionsService;
 
-    public ChallengesService(SessionsService sessionsService) {
+    public ChallengesService(ChallengeRepository challengeRepository, SessionsService sessionsService) {
+        this.challengeRepository = challengeRepository;
         this.sessionsService = sessionsService;
+
     }
 
     // Method to create a new challenge
@@ -32,20 +35,16 @@ public class ChallengesService {
 
     //Method to get active challenges
     public List<Challenge> downloadActiveChallenges(LocalDate startDate, LocalDate endDate, SportType sport) {
-        List<Challenge> activeChallenges = new ArrayList<>(challengeRepository);
-        if (startDate != null && endDate != null) { // Filter by start and end date
-            activeChallenges.removeIf(challenge -> challenge.getEndDate().isBefore(startDate) || challenge.getStartDate().isAfter(endDate));
-        } else{
-            LocalDate today = LocalDate.now(); // Get the current date
-            activeChallenges.removeIf(challenge -> challenge.getEndDate().isBefore(today) || challenge.getStartDate().isAfter(today));
-            activeChallenges.sort((c1, c2) -> c2.getEndDate().compareTo(c1.getEndDate()));
-            int size = Math.min(activeChallenges.size(), 5);
-            return activeChallenges.subList(0, size);
+        List<Challenge> activeChallenges = new ArrayList<>();
+        if(startDate != null && endDate != null && sport != null) {
+            activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(startDate, endDate, sport);
+            return activeChallenges;
+        }else {
+            LocalDate today = LocalDate.now();
+            activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(today, endDate, sport);
+            return activeChallenges;
         }
-        if (sport != null) {
-            activeChallenges.removeIf(challenge -> challenge.getSport() != sport);
-        }
-        return activeChallenges;
+
 
     }
 
@@ -54,8 +53,8 @@ public class ChallengesService {
         if (user == null || challenge == null) {
             return;
         }
-        boolean status = checkChallengeCompletion(user, challenge);
-        user.addChallenge(challenge, status);
+        //boolean status = checkChallengeCompletion(user, challenge);
+        user.addChallenge(challenge);
         challenge.addParticipant(user);
     }
 
@@ -79,7 +78,7 @@ public class ChallengesService {
     // Method to query accepted challenges that haven't finished yet
     public ArrayList<Challenge> queryAcceptedChallenges(User user) {
         // Logic to query accepted challenges
-        List<Challenge> acceptedChallenges = new ArrayList<>(user.getChallenges().keySet());
+        List<Challenge> acceptedChallenges = new ArrayList<>(user.getChallenges());
         acceptedChallenges.removeIf(challenge -> challenge.getEndDate().isBefore(LocalDate.now()));
         return new ArrayList<>(acceptedChallenges);
     }
@@ -88,7 +87,7 @@ public class ChallengesService {
     // Method to add challenge to the repository
     public void addChallenge(Challenge challenge) {
         if (challenge != null) {
-            challengeRepository.add(challenge);
+            challengeRepository.save(challenge);
         }
     }
 
@@ -97,10 +96,7 @@ public class ChallengesService {
     }
     
     //Method to find challenges by id 
-    public Challenge findChallengeById(String challengeId) {
-    	return challengeRepository.stream()
-    			.filter(challenge -> challenge.getChallengeId().equals(challengeId))
-    			.findFirst()
-    			.orElse(null);
+    public Challenge findChallengeById(Long challengeId) {
+    	return challengeRepository.findById(challengeId).orElse(null);
     }
 }

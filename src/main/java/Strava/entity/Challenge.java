@@ -1,29 +1,50 @@
 package Strava.entity;
 
+import jakarta.persistence.*;
+import org.hibernate.id.factory.spi.GenerationTypeStrategy;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "challenges")
 public class Challenge {
-    private static long counter = 0;
 
-    private String challengeId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long challengeId;
+
+    @Column(nullable = false, unique = true)
     private String name;
+
+    @Column(nullable = false)
     private LocalDate startDate;
+
+    @Column(nullable = false)
     private LocalDate endDate;
+
+    @Column(nullable = false)
     private Double targetDistance; // in kilometers (optional)
+
+    @Column(nullable = false)
     private Integer targetTime; // in minutes (optional)
+
+    @Enumerated(EnumType.STRING)
     private SportType sport;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE) // Adjust cascade type if needed
     private User user;
-    private List<User> participants;
+
+    @ManyToMany(mappedBy = "challenges", fetch = FetchType.LAZY)
+    private List<User> participants = new ArrayList<>();
 
     public Challenge() {
     }
 
     public Challenge(LocalDate endDate, String name, SportType sport, LocalDate startDate, Double targetDistance, Integer targetTime, User user) {
-        this.challengeId = generateID();
         this.endDate = endDate;
         this.name = name;
         this.sport = sport;
@@ -34,11 +55,11 @@ public class Challenge {
         this.participants = new ArrayList<User>();
     }
 
-    public String getChallengeId() {
+    public Long getChallengeId() {
         return challengeId;
     }
 
-    public void setChallengeId(String challengeId) {
+    public void setChallengeId(Long challengeId) {
         this.challengeId = challengeId;
     }
 
@@ -109,10 +130,6 @@ public class Challenge {
 
     public void addParticipant(User user) {
         this.participants.add(user);
-    }
-
-    public static synchronized String generateID() {
-        return Instant.now().toEpochMilli() + "-" + System.nanoTime() + "-" + (counter++);
     }
 
     @Override

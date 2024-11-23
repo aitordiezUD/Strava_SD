@@ -1,16 +1,38 @@
 package Strava.entity;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
-
+@Entity
+@Table(name = "sessions")
 public class Session {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private SportType sport; // Enum: CYCLING, RUNNING
+
+    @Column(nullable = false)
     private double distance; // in kilometers
+
+    @Column(nullable = false)
     private LocalDate startDate;
+
+    @Column(nullable = false)
     private LocalTime startTime;
+
+    @Column(nullable = false)
     private int duration; // in minutes
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Session() {

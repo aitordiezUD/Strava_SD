@@ -149,7 +149,7 @@ public class ChallengesController {
             @Parameter(name = "token", description = "Authorization token", required = true, example = "172778798774")
             @RequestHeader String token,
             @Parameter(name = "challengeId", description = "Challenge ID", required = true, example = "123456")
-            @RequestParam String challengeId) {
+            @RequestParam Long challengeId) {
 
         User user = authService.getUserByToken(token);
         if (user == null) {

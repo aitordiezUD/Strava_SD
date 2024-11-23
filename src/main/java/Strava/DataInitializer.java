@@ -1,5 +1,6 @@
 package Strava;
 
+import Strava.dao.UserRepository;
 import Strava.entity.*;
 import Strava.service.AuthService;
 import Strava.service.ChallengesService;
@@ -20,7 +21,7 @@ public class DataInitializer {
     private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
 
     @Bean
-    CommandLineRunner initData(AuthService authService, ChallengesService challengesService, SessionsService sessionsService) {
+    CommandLineRunner initData(AuthService authService, ChallengesService challengesService, SessionsService sessionsService, UserRepository userRepository) {
         return args -> {
             logger.info("Initializing data...");
 
@@ -29,6 +30,11 @@ public class DataInitializer {
             User user2 = new User(AuthProvider.FACEBOOK, LocalDate.parse("2003-09-30"), "user2@opendeusto.es", 2.04, 200, "user02", 60, 85.9);
             User user3 = new User(AuthProvider.FACEBOOK, LocalDate.parse("2002-10-31"), "user3@opendeusto.es", 1.80, 210, "user03", 60, 70.0);
             User user4 = new User(AuthProvider.GOOGLE, LocalDate.parse("2001-07-31"), "user4@opendeusto.es", 1.75, 190, "user04", 55, 65.0);
+
+            userRepository.save(user1);
+            userRepository.save(user2);
+            userRepository.save(user3);
+            userRepository.save(user4);
 
             authService.register(user1.getEmail(), user1.getName(), user1.getBirthdate(), user1.getAuthProvider().toString(), user1.getWeight(), user1.getHeight(), user1.getMaxHeartRate(), user1.getRestingHeartRate());
             authService.register(user2.getEmail(), user2.getName(), user2.getBirthdate(), user2.getAuthProvider().toString(), user2.getWeight(), user2.getHeight(), user2.getMaxHeartRate(), user2.getRestingHeartRate());

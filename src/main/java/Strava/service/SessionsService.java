@@ -1,5 +1,6 @@
 package Strava.service;
 
+import Strava.dao.SessionRepository;
 import Strava.entity.Session;
 import Strava.entity.SportType;
 import Strava.entity.User;
@@ -13,8 +14,11 @@ import java.util.List;
 @Service
 public class SessionsService {
 
-    // Simulating session repository
-    private static List<Session> sessionRepository = new ArrayList<>();
+    private final SessionRepository sessionRepository;
+
+    public SessionsService(SessionRepository sessionRepository) {
+        this.sessionRepository = sessionRepository;
+    }
 
     // Method to create a new session
     public void createSession(String title, String sport, double distance, LocalDate startDate,
@@ -30,46 +34,34 @@ public class SessionsService {
 
     // Method to query the last all sessions of a user
     public List<Session> queryAllSessions(User user) {
-        List<Session> sessions = new ArrayList<>();
-        for (Session session : sessionRepository) {
-            if (session.getUser().equals(user)) {
-                sessions.add(session);
-            }
-        }
-        return sessions;
+        return sessionRepository.findSessionByUser(user);
     }
 
 
     // Method to query the last 5 sessions of a user
     public List<Session> querySessions(User user, LocalDate startDate, LocalDate endDate) {
-        List<Session> sessions = queryAllSessions(user);
-        sessions.sort((s1, s2) -> s2.getStartDate().compareTo(s1.getStartDate()));
-        if (startDate != null && endDate != null) {
-            List<Session> filteredSessions = new ArrayList<>();
-            for (Session session : sessions) {
-                if (session.getStartDate().isAfter(startDate) && session.getStartDate().isBefore(endDate)) {
-                    filteredSessions.add(session);
-                }
-            }
-            return filteredSessions;
+        List<Session> sessions = new ArrayList<>();
+        if(startDate != null && endDate != null) {
+            sessions = sessionRepository.findByUserAndStartDateBetween(user, startDate, endDate);
+        }else{
+            sessions = sessionRepository.findSessionByUser(user);
         }
-        if (sessions.size() <= 5) {
-            return sessions;
-        } else {
-            return sessions.subList(0,5);
-        }
+        // Sort sessions by start date
+        sessions.sort((s1,s2) ->  s2.getStartDate().compareTo(s1.getStartDate()));
+
+        // Return the 5 first sessions
+        if(sessions.size()<=5){return sessions;}else{return sessions.subList(0, 5);}
     }
 
     // Method to add a new session to the repository
     public void addSession(Session session) {
         if (session != null) {
-            sessionRepository.add(session);
+            sessionRepository.save(session);
         }
     }
 
     // Method to get all sessions
-    public List<Session> getSessions() {
-        return sessionRepository;
-    }
+    public List<Session> getSessions(){return sessionRepository.findAll();}
+
 
 }

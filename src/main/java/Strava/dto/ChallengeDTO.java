@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import Strava.entity.SportType;
 
 public class ChallengeDTO {
-    private String challengeId;
+    private Long challengeId;
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -16,7 +16,7 @@ public class ChallengeDTO {
     public ChallengeDTO() {
     }
 
-    public ChallengeDTO(String challengeId, String name, LocalDate startDate, LocalDate endDate, Double targetDistance, Integer targetTime, String sport, String userEmail) {
+    public ChallengeDTO(Long challengeId, String name, LocalDate startDate, LocalDate endDate, Double targetDistance, Integer targetTime, String sport, String userEmail) {
         this.challengeId = challengeId;
         this.name = name;
         this.startDate = startDate;
@@ -37,11 +37,11 @@ public class ChallengeDTO {
         this.userEmail = userEmail;
     }
 
-    public String getChallengeId() {
+    public Long getChallengeId() {
         return challengeId;
     }
 
-    public void setChallengeId(String challengeId) {
+    public void setChallengeId(Long challengeId) {
         this.challengeId = challengeId;
     }
 

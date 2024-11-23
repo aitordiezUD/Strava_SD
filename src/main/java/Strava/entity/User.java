@@ -1,23 +1,60 @@
 package Strava.entity;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Map;
+import java.util.ArrayList;
 
-
+@Entity
+@Table(name = "users")
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private LocalDate birthdate;
+
+    @Column(nullable = false)
     private Double weight; // in kilograms
+
+    @Column(nullable = false)
     private Double height; // in centimeters
+
+    @Column(nullable = false)
     private Integer maxHeartRate; // beats per minute
+
+    @Column(nullable = false)
     private Integer restingHeartRate; // beats per minute
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private AuthProvider authProvider; // Enum: GOOGLE, FACEBOOK
-    private Map<Challenge,Boolean> challenges = new HashMap<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_challenges",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "challenge_id"))
+    private List<Challenge> challenges = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_sessions",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "session_id"))
+    private List<Session> sessions = new ArrayList<>();
+
 
     public User() {
     }
@@ -97,17 +134,15 @@ public class User {
         this.weight = weight;
     }
 
-    public Map<Challenge, Boolean> getChallenges() {
+    public List<Challenge> getChallenges() {
         return challenges;
     }
 
-    public void setChallenges(Map<Challenge, Boolean> challenges) {
+    public void setChallenges(List<Challenge> challenges) {
         this.challenges = challenges;
     }
 
-    public void addChallenge(Challenge challenge, Boolean achieved) {
-        challenges.put(challenge,achieved);
-    }
+    public void addChallenge(Challenge challenge) {this.challenges.add(challenge);}
 
     public void removeChallenge(Challenge challenge) {
         challenges.remove(challenge);
