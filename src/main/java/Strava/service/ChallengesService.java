@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChallengesService {
@@ -35,18 +37,27 @@ public class ChallengesService {
 
     //Method to get active challenges
     public List<Challenge> downloadActiveChallenges(LocalDate startDate, LocalDate endDate, SportType sport) {
-        List<Challenge> activeChallenges = new ArrayList<>();
-        if(startDate != null && endDate != null && sport != null) {
-            activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(startDate, endDate, sport);
-            return activeChallenges;
-        }else {
-            LocalDate today = LocalDate.now();
-            activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(today, endDate, sport);
-            return activeChallenges;
+        LocalDate today = LocalDate.now();
+        LocalDate effectiveStartDate = (startDate != null) ? startDate : today;
+        LocalDate effectiveEndDate = (endDate != null) ? endDate : today.plusYears(1); // Default to 1 year in the future if no end date is specified.
+
+        // Fetch challenges based on provided filters.
+        List<Challenge> activeChallenges;
+        if (sport != null) {
+            activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(
+                    effectiveStartDate, effectiveEndDate, sport);
+        } else {
+            activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                    effectiveStartDate, effectiveEndDate);
         }
 
-
+        // Return the 5 most recent challenges by default.
+        return activeChallenges.stream()
+                .sorted(Comparator.comparing(Challenge::getStartDate).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
     }
+
 
     // Method to accept a challenge
     public void acceptChallenge(User user, Challenge challenge) {
