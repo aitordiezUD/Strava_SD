@@ -37,11 +37,15 @@ public class ChallengesService {
     public List<Challenge> downloadActiveChallenges(LocalDate startDate, LocalDate endDate, SportType sport) {
         List<Challenge> activeChallenges = new ArrayList<>();
         if(startDate != null && endDate != null && sport != null) {
+            System.out.println("DentroIf");
             activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(startDate, endDate, sport);
+            System.out.println("ActiveChallenges: " + activeChallenges);
             return activeChallenges;
         }else {
             LocalDate today = LocalDate.now();
+            System.out.println("DentroElse");
             activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(today, endDate, sport);
+            System.out.println("ActiveChallenges: " + activeChallenges);
             return activeChallenges;
         }
 
@@ -58,22 +62,6 @@ public class ChallengesService {
         challenge.addParticipant(user);
     }
 
-    // Method to check if the challenge is completed
-    public boolean checkChallengeCompletion(User user, Challenge challenge) {
-        LocalDate startDate = challenge.getStartDate();
-        LocalDate endDate = challenge.getEndDate();
-        List<Session> sessions = sessionsService.queryAllSessions(user);
-        for (Session session : sessions) {
-            if (session.getStartDate().isAfter(startDate) && session.getStartDate().isBefore(endDate)) {
-                if (challenge.getTargetDistance() != null && session.getDistance() >= challenge.getTargetDistance()
-                && challenge.getTargetTime() != null && session.getDuration() <= challenge.getTargetTime()) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
 
     // Method to query accepted challenges that haven't finished yet
     public ArrayList<Challenge> queryAcceptedChallenges(User user) {
