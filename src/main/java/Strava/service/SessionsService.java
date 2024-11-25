@@ -31,19 +31,13 @@ public class SessionsService {
 //    Querying my training session: Each individual can view their completed training sessions. By default, only the
 //    last 5 sessions will be displayed, but it is possible to retrieve and view all sessions within a specified
 //    start and end date.
-
-    // Method to query the last all sessions of a user
-    public List<Session> queryAllSessions(User user) {
-        return sessionRepository.findSessionByUser(user);
-    }
-
-
-    // Method to query the last 5 sessions of a user
     public List<Session> querySessions(User user, LocalDate startDate, LocalDate endDate) {
         List<Session> sessions = new ArrayList<>();
         if(startDate != null && endDate != null) {
+            System.out.println("Querying sessions between " + startDate + " and " + endDate);
             sessions = sessionRepository.findByUserAndStartDateBetween(user, startDate, endDate);
         }else{
+            System.out.println("Querying last 5 sessions");
             sessions = sessionRepository.findSessionByUser(user);
         }
         // Sort sessions by start date

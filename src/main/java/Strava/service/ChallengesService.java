@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ChallengesService {
@@ -37,27 +35,22 @@ public class ChallengesService {
 
     //Method to get active challenges
     public List<Challenge> downloadActiveChallenges(LocalDate startDate, LocalDate endDate, SportType sport) {
-        LocalDate today = LocalDate.now();
-        LocalDate effectiveStartDate = (startDate != null) ? startDate : today;
-        LocalDate effectiveEndDate = (endDate != null) ? endDate : today.plusYears(1); // Default to 1 year in the future if no end date is specified.
-
-        // Fetch challenges based on provided filters.
-        List<Challenge> activeChallenges;
-        if (sport != null) {
-            activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(
-                    effectiveStartDate, effectiveEndDate, sport);
-        } else {
-            activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(
-                    effectiveStartDate, effectiveEndDate);
+        List<Challenge> activeChallenges = new ArrayList<>();
+        if(startDate != null && endDate != null && sport != null) {
+            System.out.println("DentroIf");
+            activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(startDate, endDate, sport);
+            System.out.println("ActiveChallenges: " + activeChallenges);
+            return activeChallenges;
+        }else {
+            LocalDate today = LocalDate.now();
+            System.out.println("DentroElse");
+            activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(today, endDate, sport);
+            System.out.println("ActiveChallenges: " + activeChallenges);
+            return activeChallenges;
         }
 
-        // Return the 5 most recent challenges by default.
-        return activeChallenges.stream()
-                .sorted(Comparator.comparing(Challenge::getStartDate).reversed())
-                .limit(5)
-                .collect(Collectors.toList());
-    }
 
+    }
 
     // Method to accept a challenge
     public void acceptChallenge(User user, Challenge challenge) {
@@ -69,22 +62,6 @@ public class ChallengesService {
         challenge.addParticipant(user);
     }
 
-    // Method to check if the challenge is completed
-    public boolean checkChallengeCompletion(User user, Challenge challenge) {
-        LocalDate startDate = challenge.getStartDate();
-        LocalDate endDate = challenge.getEndDate();
-        List<Session> sessions = sessionsService.queryAllSessions(user);
-        for (Session session : sessions) {
-            if (session.getStartDate().isAfter(startDate) && session.getStartDate().isBefore(endDate)) {
-                if (challenge.getTargetDistance() != null && session.getDistance() >= challenge.getTargetDistance()
-                && challenge.getTargetTime() != null && session.getDuration() <= challenge.getTargetTime()) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
 
     // Method to query accepted challenges that haven't finished yet
     public ArrayList<Challenge> queryAcceptedChallenges(User user) {
