@@ -32,7 +32,7 @@ public class Session {
     private int duration; // in minutes
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Session() {
