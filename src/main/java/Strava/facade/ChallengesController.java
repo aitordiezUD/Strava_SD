@@ -160,7 +160,7 @@ public class ChallengesController {
         if (challenge == null) {
             return ResponseEntity.status(404).body("Challenge not found");
         }
-
+        System.out.println("Challenge: " + challenge);
         challengesService.acceptChallenge(user, challenge);
         return ResponseEntity.ok("Challenge accepted succesfully");
     }

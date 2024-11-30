@@ -24,7 +24,7 @@ public class GoogleGateway implements IAuthGateway{
 //        System.out.println("email = " + email);
         HttpClient client = HttpClient.newHttpClient();
 
-        String RestMapping = "/auth/checking";
+        String RestMapping = "/users/checking";
         // In this case we use a GET request with the email as a parameter
         String uri = BASE_URL + RestMapping + "?email=" + email;
 
@@ -51,7 +51,7 @@ public class GoogleGateway implements IAuthGateway{
 //        System.out.println("password = " + password);
 
         HttpClient client = HttpClient.newHttpClient();
-        String RestMapping = "/auth/identification";
+        String RestMapping = "/users/identification";
         String uri = BASE_URL + RestMapping;
         // In this case we use a POST request with the email and password in the body
         CredentialsDTO credentials = new CredentialsDTO(email, password);
@@ -75,7 +75,7 @@ public class GoogleGateway implements IAuthGateway{
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-//        System.out.println("response.statusCode() = " + response.statusCode());
+        System.out.println("response.statusCode() = " + response.statusCode());
 
         return response.statusCode() == 200;
     }

@@ -129,7 +129,9 @@ public class Challenge {
     }
 
     public void addParticipant(User user) {
-        this.participants.add(user);
+        if (!this.participants.contains(user)) {
+            this.participants.add(user);
+        }
     }
 
     @Override

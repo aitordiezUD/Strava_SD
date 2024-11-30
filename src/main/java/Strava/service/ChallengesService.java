@@ -1,6 +1,7 @@
 package Strava.service;
 
 import Strava.dao.ChallengeRepository;
+import Strava.dao.UserRepository;
 import Strava.entity.Challenge;
 import Strava.entity.Session;
 import Strava.entity.SportType;
@@ -15,23 +16,22 @@ import java.util.List;
 @Service
 public class ChallengesService {
 
-    //Simulating challenge repository
     private final ChallengeRepository challengeRepository;
-    private final SessionsService sessionsService;
+    private final UserRepository userRepository;  // Añadir el UserRepository
 
-    public ChallengesService(ChallengeRepository challengeRepository, SessionsService sessionsService) {
+    public ChallengesService(ChallengeRepository challengeRepository, UserRepository userRepository) {
         this.challengeRepository = challengeRepository;
-        this.sessionsService = sessionsService;
-
+        this.userRepository = userRepository;
     }
 
     // Method to create a new challenge
-    public void createChallenge(String name, LocalDate startDate, LocalDate endDate,
+    public Challenge createChallenge(String name, LocalDate startDate, LocalDate endDate,
                                      Double targetDistance, Integer targetTime,
                                      SportType sport, User creator) {
         Challenge challenge = new Challenge(endDate, name, sport, startDate, targetDistance, targetTime, creator);
         addChallenge(challenge);
         sendConfirmationEmail(creator, challenge); // Optional email notification
+        return challenge;
     }
 
     //Method to get active challenges
@@ -46,9 +46,9 @@ public class ChallengesService {
         }else{
             LocalDate today = LocalDate.now();
             if(sport != null) {
-                activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(today, today, sport);
+                activeChallenges = challengeRepository.findByEndDateGreaterThanEqualAndSport(today, sport);
             }else{
-                activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(today, today);
+                activeChallenges = challengeRepository.findByEndDateGreaterThanEqual(today);
             }
         }
 
@@ -61,10 +61,21 @@ public class ChallengesService {
         if (user == null || challenge == null) {
             return;
         }
-        //boolean status = checkChallengeCompletion(user, challenge);
-        user.addChallenge(challenge);
-        challenge.addParticipant(user);
+
+        // Añadir al usuario a la lista de participantes del desafío
+        if (!challenge.getParticipants().contains(user)) {
+            challenge.addParticipant(user);
+        }
+
+        // Añadir el desafío a la lista de desafíos en los que participa el usuario
+        if (!user.getParticipatingChallenges().contains(challenge)) {
+            user.addChallengeParticipation(challenge);
+        }
+
+        challengeRepository.save(challenge);
+        userRepository.save(user);
     }
+
 
 
     // Method to query accepted challenges that haven't finished yet

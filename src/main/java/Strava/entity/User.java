@@ -43,7 +43,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider; // Enum: GOOGLE, FACEBOOK
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_challenges",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -53,7 +53,6 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Challenge> challenges = new ArrayList<>();
-
 
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -148,8 +147,19 @@ public class User {
 
     public void addChallenge(Challenge challenge) {this.challenges.add(challenge);}
 
+    public void addChallengeParticipation(Challenge challenge) {
+        if (!this.participatingChallenges.contains(challenge)) {
+            this.participatingChallenges.add(challenge);
+        }
+    }
+
     public void removeChallenge(Challenge challenge) {
         challenges.remove(challenge);
+    }
+
+
+    public List<Challenge> getParticipatingChallenges() {
+        return participatingChallenges;
     }
 
     @Override
