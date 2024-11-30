@@ -5,6 +5,7 @@ import Strava.entity.Challenge;
 import Strava.entity.Session;
 import Strava.entity.SportType;
 import Strava.entity.User;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -36,19 +37,22 @@ public class ChallengesService {
     //Method to get active challenges
     public List<Challenge> downloadActiveChallenges(LocalDate startDate, LocalDate endDate, SportType sport) {
         List<Challenge> activeChallenges = new ArrayList<>();
-        if(startDate != null && endDate != null && sport != null) {
-            System.out.println("DentroIf");
-            activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(startDate, endDate, sport);
-            System.out.println("ActiveChallenges: " + activeChallenges);
-            return activeChallenges;
-        }else {
+        if(startDate != null && endDate != null) {
+            if (sport != null) {
+                activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(startDate, endDate, sport);
+            }else{
+                activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(startDate, endDate);
+            }
+        }else{
             LocalDate today = LocalDate.now();
-            System.out.println("DentroElse");
-            activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(today, endDate, sport);
-            System.out.println("ActiveChallenges: " + activeChallenges);
-            return activeChallenges;
+            if(sport != null) {
+                activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(today, today, sport);
+            }else{
+                activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(today, today);
+            }
         }
 
+        return activeChallenges;
 
     }
 

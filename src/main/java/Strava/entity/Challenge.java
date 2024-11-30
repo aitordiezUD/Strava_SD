@@ -35,10 +35,10 @@ public class Challenge {
     @Enumerated(EnumType.STRING)
     private SportType sport;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE) // Adjust cascade type if needed
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE) // Adjust cascade type if needed
     private User user;
 
-    @ManyToMany(mappedBy = "challenges", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "participatingChallenges", fetch = FetchType.EAGER)
     private List<User> participants = new ArrayList<>();
 
     public Challenge() {

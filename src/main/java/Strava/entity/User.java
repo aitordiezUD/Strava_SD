@@ -43,16 +43,20 @@ public class User {
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider; // Enum: GOOGLE, FACEBOOK
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_challenges",
+    @ManyToMany
+    @JoinTable(
+            name = "user_challenges",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "challenge_id"))
+            inverseJoinColumns = @JoinColumn(name = "challenge_id")
+    )
+    private List<Challenge> participatingChallenges = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Challenge> challenges = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_sessions",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "session_id"))
+
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Session> sessions = new ArrayList<>();
 
 
