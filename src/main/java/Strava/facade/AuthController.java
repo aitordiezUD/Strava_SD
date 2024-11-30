@@ -80,7 +80,7 @@ public class AuthController {
                             @ApiResponse(responseCode = "400", description = "Bad request")
                     }
     )
-    @PostMapping("/register")
+    @PostMapping("/registration")
     public ResponseEntity<Void> register(
             @Parameter(name = "registerRequest", description = "User's register details", required = true)
             @RequestBody RegisterRequestDTO registerRequest

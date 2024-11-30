@@ -20,8 +20,8 @@ public class GoogleGateway implements IAuthGateway{
 
     @Override
     public boolean checkUserExists(String email) {
-        System.out.println("GoogleGateway.checkUserExists");
-        System.out.println("email = " + email);
+//        System.out.println("GoogleGateway.checkUserExists");
+//        System.out.println("email = " + email);
         HttpClient client = HttpClient.newHttpClient();
 
         String RestMapping = "/auth/checking";
@@ -39,16 +39,16 @@ public class GoogleGateway implements IAuthGateway{
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("response.statusCode() = " + response.statusCode());
+//        System.out.println("response.statusCode() = " + response.statusCode());
 
         return response.statusCode() == 200;
     }
 
     @Override
     public boolean userAuth(String email, String password) {
-        System.out.println("GoogleGateway.userAuth");
-        System.out.println("email = " + email);
-        System.out.println("password = " + password);
+//        System.out.println("GoogleGateway.userAuth");
+//        System.out.println("email = " + email);
+//        System.out.println("password = " + password);
 
         HttpClient client = HttpClient.newHttpClient();
         String RestMapping = "/auth/identification";
@@ -75,7 +75,7 @@ public class GoogleGateway implements IAuthGateway{
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("response.statusCode() = " + response.statusCode());
+//        System.out.println("response.statusCode() = " + response.statusCode());
 
         return response.statusCode() == 200;
     }

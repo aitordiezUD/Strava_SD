@@ -24,7 +24,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/session")
+@RequestMapping("/sessions")
 public class SessionsController {
 
     private static final Logger log = LoggerFactory.getLogger(SessionsController.class);
@@ -46,7 +46,7 @@ public class SessionsController {
         }
     )
 
-    @GetMapping("/sessions")
+    @GetMapping
     public ResponseEntity<List<SessionDTO>> getAllSessions(
         @Parameter(name = "startDate", description = "Start date to filter the sessions", example = "2021-01-01")
         @RequestParam(name = "startDate", required = false) LocalDate startDate,
@@ -85,7 +85,7 @@ public class SessionsController {
         }
     )
 
-    @PostMapping("/session")
+    @PostMapping
     public  ResponseEntity<Void> createSession(
         @Parameter(name = "session", description = "Session data", required = true)
         @RequestBody SessionDTO sessionDTO,

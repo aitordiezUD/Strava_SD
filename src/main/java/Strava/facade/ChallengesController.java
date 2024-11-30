@@ -56,7 +56,7 @@ public class ChallengesController {
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
-    @PostMapping("/challenge")
+    @PostMapping
     public ResponseEntity<Void> createChallenge(
             @Parameter(name = "challenge", description = "Challenge data", required = true)
             @RequestBody ChallengeCreationDTO challengeCreationDTO,
@@ -144,7 +144,7 @@ public class ChallengesController {
             }
     )
 
-    @PostMapping("/accept")
+    @PostMapping("/acceptation")
     public ResponseEntity<?> acceptChallenge(
             @Parameter(name = "token", description = "Authorization token", required = true, example = "172778798774")
             @RequestHeader String token,
