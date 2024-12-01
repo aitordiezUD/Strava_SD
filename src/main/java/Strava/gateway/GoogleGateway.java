@@ -9,11 +9,25 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.io.*;
+import java.util.Properties;
 
 public class GoogleGateway implements IAuthGateway{
 
-    private static final String BASE_URL = "http://localhost:8081";
+    private static final String CONFIG_FILE = "src/main/java/Strava/config.properties";
+//    private static final String BASE_URL = "http://localhost:8081";
+    private static String BASE_URL;
 
+    static {
+        try (InputStream input = new FileInputStream(CONFIG_FILE)) {
+            Properties prop = new Properties();
+            prop.load(input);
+            BASE_URL = prop.getProperty("google.address");
+        } catch (IOException ex) {
+            System.err.println("# GoogleGateway - Error loading configuration: " + ex.getMessage());
+            BASE_URL = "http://localhost:8081"; // Defaults
+        }
+    }
 
     public GoogleGateway() {
     }

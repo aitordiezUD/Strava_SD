@@ -62,12 +62,10 @@ public class ChallengesService {
             return;
         }
 
-        // Añadir al usuario a la lista de participantes del desafío
         if (!challenge.getParticipants().contains(user)) {
             challenge.addParticipant(user);
         }
 
-        // Añadir el desafío a la lista de desafíos en los que participa el usuario
         if (!user.getParticipatingChallenges().contains(challenge)) {
             user.addChallengeParticipation(challenge);
         }
