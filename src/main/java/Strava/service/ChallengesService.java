@@ -64,14 +64,14 @@ public class ChallengesService {
 
         if (!challenge.getParticipants().contains(user)) {
             challenge.addParticipant(user);
+//            challengeRepository.save(challenge);
         }
 
         if (!user.getParticipatingChallenges().contains(challenge)) {
             user.addChallengeParticipation(challenge);
+            userRepository.save(user);
         }
 
-        challengeRepository.save(challenge);
-        userRepository.save(user);
     }
 
 
@@ -88,6 +88,7 @@ public class ChallengesService {
     // Method to add challenge to the repository
     public void addChallenge(Challenge challenge) {
         if (challenge != null) {
+
             challengeRepository.save(challenge);
         }
     }
