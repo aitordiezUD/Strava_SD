@@ -30,6 +30,28 @@ public class AuthService {
     // Registration method that adds a new user to the repository
     // Includes the following basic information: email, name, birthdate;
     // and optionally: weight in kilograms, height in centimeters, maximum heart rate, heart rate at rest
+//    public boolean register(String email,
+//                            String name,
+//                            LocalDate birthdate,
+//                            String authProviderStr,
+//                            Double weight,
+//                            Double height,
+//                            Integer maxHeartRate,
+//                            Integer restingHeartRate) {
+//
+//        AuthProvider authProvider = AuthProvider.valueOf(authProviderStr.toUpperCase());
+//
+//        Optional<User> existingUser = userRepository.findByEmail(email);
+//        // Check if a user already exists with the same email
+//        if (existingUser.isPresent()) {
+//            return false;
+//        }else{
+//            User user = new User(authProvider, birthdate, email, height, maxHeartRate, name, restingHeartRate, weight);
+//            userRepository.save(user);
+//            return true;
+//        }
+//    }
+
     public boolean register(String email,
                             String name,
                             LocalDate birthdate,
@@ -40,18 +62,14 @@ public class AuthService {
                             Integer restingHeartRate) {
 
         AuthProvider authProvider = AuthProvider.valueOf(authProviderStr.toUpperCase());
-
-        Optional<User> existingUser = userRepository.findByEmail(email);
-        // Check if a user already exists with the same email
-        if (existingUser.isPresent()) {
-            return false;
-        }else{
+        if (checkUserExists(email, authProvider)){
             User user = new User(authProvider, birthdate, email, height, maxHeartRate, name, restingHeartRate, weight);
             userRepository.save(user);
             return true;
+        } else {
+            return false;
         }
     }
-
 
 
     // Login method that checks if the user exists in the database and validates the password

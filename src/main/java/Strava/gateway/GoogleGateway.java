@@ -34,8 +34,6 @@ public class GoogleGateway implements IAuthGateway{
 
     @Override
     public boolean checkUserExists(String email) {
-//        System.out.println("GoogleGateway.checkUserExists");
-//        System.out.println("email = " + email);
         HttpClient client = HttpClient.newHttpClient();
 
         String RestMapping = "/users/checking";
@@ -53,8 +51,7 @@ public class GoogleGateway implements IAuthGateway{
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-//        System.out.println("response.statusCode() = " + response.statusCode());
-
+        System.out.println("response.statusCode() = " + response.statusCode());
         return response.statusCode() == 200;
     }
 
