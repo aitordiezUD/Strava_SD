@@ -45,7 +45,6 @@ public class SessionsController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
         }
     )
-
     @GetMapping
     public ResponseEntity<List<SessionDTO>> getAllSessions(
         @Parameter(name = "startDate", description = "Start date to filter the sessions", example = "2021-01-01")
@@ -53,7 +52,7 @@ public class SessionsController {
         @Parameter(name = "endDate", description = "End date to filter the sessions", example = "2021-12-31")
         @RequestParam(name = "endDate",required = false) LocalDate endDate,
         @Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
-        @RequestBody String token) {
+        @RequestHeader String token) {
         try {
             User user = authService.getUserByToken(token);
             if (user == null) {

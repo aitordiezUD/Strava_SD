@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 
-    List<Challenge> findByStartDateLessThanEqualAndEndDateGreaterThanEqual(LocalDate effectiveStartDate, LocalDate effectiveEndDate);
-    List<Challenge> findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(LocalDate effectiveStartDate, LocalDate effectiveEndDate, SportType sport);
+    List<Challenge> findByStartDateGreaterThanEqualAndEndDateLessThanEqual(LocalDate effectiveStartDate, LocalDate effectiveEndDate);
     List<Challenge> findByEndDateGreaterThanEqual(LocalDate date);
     List<Challenge> findByEndDateGreaterThanEqualAndSport(LocalDate date, SportType sport);
+    List<Challenge> findByStartDateGreaterThanEqualAndEndDateLessThanEqualAndSport(LocalDate effectiveStartDate, LocalDate effectiveEndDate, SportType sport);
 }

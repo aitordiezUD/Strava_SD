@@ -18,10 +18,7 @@ public class AuthService {
 
     // Storage to keep the session of the users that are logged in
     private static Map<String, User> tokenStore = new HashMap<>();
-
-    private static final IAuthGateway facebookGateway = AuthGatewayFactory.getInstance().createAuthGateway(AuthProvider.FACEBOOK);
-
-    private static final IAuthGateway googleGateway = AuthGatewayFactory.getInstance().createAuthGateway(AuthProvider.GOOGLE);
+    private static IAuthGateway authGateway;
 
     public AuthService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -30,28 +27,6 @@ public class AuthService {
     // Registration method that adds a new user to the repository
     // Includes the following basic information: email, name, birthdate;
     // and optionally: weight in kilograms, height in centimeters, maximum heart rate, heart rate at rest
-//    public boolean register(String email,
-//                            String name,
-//                            LocalDate birthdate,
-//                            String authProviderStr,
-//                            Double weight,
-//                            Double height,
-//                            Integer maxHeartRate,
-//                            Integer restingHeartRate) {
-//
-//        AuthProvider authProvider = AuthProvider.valueOf(authProviderStr.toUpperCase());
-//
-//        Optional<User> existingUser = userRepository.findByEmail(email);
-//        // Check if a user already exists with the same email
-//        if (existingUser.isPresent()) {
-//            return false;
-//        }else{
-//            User user = new User(authProvider, birthdate, email, height, maxHeartRate, name, restingHeartRate, weight);
-//            userRepository.save(user);
-//            return true;
-//        }
-//    }
-
     public boolean register(String email,
                             String name,
                             LocalDate birthdate,
@@ -98,42 +73,15 @@ public class AuthService {
 
     // Method to check the password based on the authentication provider
     private boolean checkPassword(String email, String password, AuthProvider authProvider) {
-        if (authProvider == AuthProvider.GOOGLE) {
-            return checkPasswordGoogle(email, password);
-        } else if (authProvider == AuthProvider.FACEBOOK) {
-            return checkPasswordFacebook(email, password);
-        } else {
-            return false;
-        }
-    }
-
-    private boolean checkPasswordGoogle(String email, String password) {
-//        return googleUsers.get(email).equals(password);
-        return googleGateway.userAuth(email, password);
-    }
-
-    private boolean checkPasswordFacebook(String email, String password) {
-        return facebookGateway.userAuth(email, password);
+        authGateway = AuthGatewayFactory.getInstance().createAuthGateway(authProvider);
+        return authGateway.userAuth(email, password);
     }
 
     private boolean checkUserExists(String email, AuthProvider authProvider) {
-        if (authProvider == AuthProvider.GOOGLE) {
-            return checkUserExistsGoogle(email);
-        } else if (authProvider == AuthProvider.FACEBOOK) {
-            return checkUserExistsFacebook(email);
-        } else {
-            return false;
-        }
+        authGateway = AuthGatewayFactory.getInstance().createAuthGateway(authProvider);
+        return authGateway.checkUserExists(email);
     }
 
-    private boolean checkUserExistsGoogle(String email) {
-//        return googleUsers.containsKey(email);
-        return googleGateway.checkUserExists(email);
-    }
-
-    private boolean checkUserExistsFacebook(String email) {
-        return facebookGateway.checkUserExists(email);
-    }
 
     // Method to get the user based on the token
     public User getUserByToken(String token) {

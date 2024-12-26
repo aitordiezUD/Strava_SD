@@ -1,8 +1,6 @@
 package Strava.dto;
 import java.time.LocalDate;
 
-import Strava.entity.SportType;
-
 public class ChallengeDTO {
     private Long challengeId;
     private String name;
@@ -89,12 +87,12 @@ public class ChallengeDTO {
         return sport;
     }
     
-    public SportType getSportType() {
-    	return SportType.valueOf(sport.toUpperCase());
-    }
-    public void setSport(String sport) {
-        this.sport = sport;
-    }
+//    public SportType getSportType() {
+//    	return SportType.valueOf(sportType.toUpperCase());
+//    }
+//    public void setSportType(String sportType) {
+//        this.sportType = sportType;
+//    }
 
     @Override
     public String toString() {

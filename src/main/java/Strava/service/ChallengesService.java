@@ -39,9 +39,9 @@ public class ChallengesService {
         List<Challenge> activeChallenges = new ArrayList<>();
         if(startDate != null && endDate != null) {
             if (sport != null) {
-                activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndSport(startDate, endDate, sport);
+                activeChallenges = challengeRepository.findByStartDateGreaterThanEqualAndEndDateLessThanEqualAndSport(startDate, endDate, sport);
             }else{
-                activeChallenges = challengeRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(startDate, endDate);
+                activeChallenges = challengeRepository.findByStartDateGreaterThanEqualAndEndDateLessThanEqual(startDate, endDate);
             }
         }else{
             LocalDate today = LocalDate.now();

@@ -15,6 +15,17 @@ public class RegisterRequestDTO {
     private Integer maxHeartRate;
     private Integer restingHeartRate;
 
+    public RegisterRequestDTO(String name, String email, LocalDate birthday, String authProviderStr, double weight, double height, Integer maxHeartRate, Integer restingHeartRate){
+        this.name = name;
+        this.email = email;
+        this.birthday = birthday;
+        this.authProviderStr = authProviderStr;
+        this.weight = weight;
+        this.height = height;
+        this.maxHeartRate = maxHeartRate;
+        this.restingHeartRate = restingHeartRate;
+    }
+
     //Getters and setters
     public String getName(){return name;}
     public void setName(String name){this.name = name;}

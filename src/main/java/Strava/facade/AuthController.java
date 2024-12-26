@@ -83,11 +83,24 @@ public class AuthController {
     @PostMapping("/registration")
     public ResponseEntity<Void> register(
             @Parameter(name = "registerRequest", description = "User's register details", required = true)
-            @RequestBody RegisterRequestDTO registerRequest
-    ){
-        if (authService.register(registerRequest.getEmail(), registerRequest.getName(), registerRequest.getBirthday(), registerRequest.getAuthProviderStr(),
-                registerRequest.getWeight(), registerRequest.getHeight(), registerRequest.getMaxHeartRate(), registerRequest.getRestingHeartRate()))
-        {return new ResponseEntity<>(HttpStatus.CREATED);}else {return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
+            @RequestBody RegisterRequestDTO registerRequest){
+        boolean result = authService.register(
+                registerRequest.getEmail(),
+                registerRequest.getName(),
+                registerRequest.getBirthday(),
+                registerRequest.getAuthProviderStr(),
+                registerRequest.getWeight(),
+                registerRequest.getHeight(),
+                registerRequest.getMaxHeartRate(),
+                registerRequest.getRestingHeartRate());
+
+//        System.out.println(result);
+        if (result) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
     }
 }
