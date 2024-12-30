@@ -100,10 +100,6 @@ public class ChallengesController {
             @RequestHeader String token) {
 
         try {
-            System.err.println("Start Date: " + startDate);
-            System.err.println("End Date: " + endDate);
-            System.err.println("Sport: " + sport);
-            System.out.println("Token: " + token);
             User user = authService.getUserByToken(token);
             if (user == null) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -111,7 +107,6 @@ public class ChallengesController {
             List<Challenge> activeChallenges;
             if (sport != null) {
                 SportType sport_Type = SportType.valueOf(sport.toUpperCase());
-                System.err.println("Dentro null");
                 activeChallenges = challengesService.downloadActiveChallenges(startDate, endDate, sport_Type);
             } else {
                 activeChallenges = challengesService.downloadActiveChallenges(startDate, endDate, null);

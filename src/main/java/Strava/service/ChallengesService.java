@@ -79,9 +79,10 @@ public class ChallengesService {
     // Method to query accepted challenges that haven't finished yet
     public ArrayList<Challenge> queryAcceptedChallenges(User user) {
         // Logic to query accepted challenges
-        List<Challenge> acceptedChallenges = new ArrayList<>(user.getChallenges());
-        acceptedChallenges.removeIf(challenge -> challenge.getEndDate().isBefore(LocalDate.now()));
-        return new ArrayList<>(acceptedChallenges);
+//        List<Challenge> acceptedChallenges = new ArrayList<>(user.getChallenges());
+//        acceptedChallenges.removeIf(challenge -> challenge.getEndDate().isBefore(LocalDate.now()));
+//        return new ArrayList<>(acceptedChallenges);
+        return (ArrayList<Challenge>) userRepository.findParticipatingChallengesByUserIdAndEndDate(user.getId(), LocalDate.now());
     }
 
 

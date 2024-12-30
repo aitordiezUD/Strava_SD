@@ -157,6 +157,13 @@ public class User {
         challenges.remove(challenge);
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public List<Challenge> getParticipatingChallenges() {
         return participatingChallenges;
