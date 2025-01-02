@@ -52,11 +52,11 @@ public class DataInitializer {
             // Save the challenge
 //            challengesService.addChallenge(challenge);
 
-            challengesService.createChallenge("Marathon Training", LocalDate.parse("2024-01-01"), LocalDate.parse("2024-12-31"), 42.195, 240, SportType.RUNNING, user1);
-            challengesService.createChallenge("Cycling Challenge", LocalDate.parse("2024-03-01"), LocalDate.parse("2024-06-30"), 100.0, 300, SportType.CYCLING, user2);
-            challengesService.createChallenge("Swimming Sprint", LocalDate.parse("2024-07-01"), LocalDate.parse("2024-09-15"), 1.5, 30, SportType.RUNNING, user3);
-            Challenge ch4 = challengesService.createChallenge("Triathlon Prep", LocalDate.parse("2024-01-01"), LocalDate.parse("2024-12-31"), 51.5, 180, SportType.RUNNING, user2);
-            challengesService.createChallenge("Hiking Adventure", LocalDate.parse("2024-06-01"), LocalDate.parse("2024-08-20"), 20.0, 240, SportType.RUNNING, user1);
+            challengesService.createChallenge("Marathon Training", LocalDate.parse("2024-01-01"), LocalDate.parse("2025-12-31"), 42.195, 240, SportType.RUNNING, user1);
+            challengesService.createChallenge("Cycling Challenge", LocalDate.parse("2024-03-01"), LocalDate.parse("2025-06-30"), 100.0, 300, SportType.CYCLING, user2);
+            challengesService.createChallenge("Swimming Sprint", LocalDate.parse("2024-07-01"), LocalDate.parse("2025-09-15"), 1.5, 30, SportType.RUNNING, user3);
+            Challenge ch4 = challengesService.createChallenge("Triathlon Prep", LocalDate.parse("2024-01-01"), LocalDate.parse("2025-12-31"), 51.5, 180, SportType.RUNNING, user2);
+            challengesService.createChallenge("Hiking Adventure", LocalDate.parse("2024-06-01"), LocalDate.parse("2025-08-20"), 20.0, 240, SportType.RUNNING, user1);
             challengesService.createChallenge("Cycling Tour", LocalDate.parse("2024-07-01"), LocalDate.parse("2025-09-30"), 200.0, 600, SportType.CYCLING, user2);
 
             logger.info("Challenges saved!");
