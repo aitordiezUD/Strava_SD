@@ -58,12 +58,12 @@ public class DataInitializer {
             Challenge ch4 = challengesService.createChallenge("Triathlon Prep", LocalDate.parse("2024-01-01"), LocalDate.parse("2025-12-31"), 51.5, 180, SportType.RUNNING, user2);
             challengesService.createChallenge("Hiking Adventure", LocalDate.parse("2024-06-01"), LocalDate.parse("2025-08-20"), 20.0, 240, SportType.RUNNING, user1);
             challengesService.createChallenge("Cycling Tour", LocalDate.parse("2024-07-01"), LocalDate.parse("2025-09-30"), 200.0, 600, SportType.CYCLING, user2);
-
+            Challenge ch5 = challengesService.createChallenge("Running Challenge", LocalDate.parse("2022-08-01"), LocalDate.parse("2025-10-31"), 10.0, 60, SportType.RUNNING, user3);
             logger.info("Challenges saved!");
 
 
 //            // Create some sessions
-            sessionsService.createSession("Morning Run", "RUNNING", 10.0, LocalDate.parse("2024-10-31"), LocalTime.parse("06:00"), 60, user1);
+            sessionsService.createSession("Half Marathon Training", "RUNNING", 15.0, LocalDate.parse("2024-10-31"), LocalTime.parse("06:00"), 100, user1);
             sessionsService.createSession("Cycling Session", "CYCLING", 25.0, LocalDate.parse("2024-07-04"), LocalTime.parse("07:30"), 90, user2);
             sessionsService.createSession("Evening Jog", "RUNNING", 5.0, LocalDate.parse("2021-10-31"), LocalTime.parse("18:00"), 30, user3);
             sessionsService.createSession("Early Ride", "CYCLING", 15.0, LocalDate.parse("2024-10-29"), LocalTime.parse("05:45"), 75, user4);
@@ -76,6 +76,7 @@ public class DataInitializer {
 
 //            Accept a Challenge
             challengesService.acceptChallenge(user2, ch4);
+            challengesService.acceptChallenge(user1, ch5);
 //            challengesService.acceptChallenge(user1, ch4);
             challengesService.acceptChallenge(user3, ch4);
             challengesService.acceptChallenge(user4, ch4);

@@ -1,5 +1,6 @@
 package Strava.facade;
 
+import Strava.dto.AcceptedChallengeDTO;
 import Strava.dto.ChallengeCreationDTO;
 import Strava.dto.ChallengeDTO;
 import Strava.dto.SessionDTO;
@@ -132,7 +133,6 @@ public class ChallengesController {
 
     // ACCEPT CHALLENGE
     @Operation(
-
             summary = "Accept a challenge",
             description = "Accepts a specific challenge for the authenticated user",
             responses = {
@@ -142,14 +142,12 @@ public class ChallengesController {
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
-
     @PostMapping("/acceptation")
     public ResponseEntity<?> acceptChallenge(
             @Parameter(name = "token", description = "Authorization token", required = true, example = "172778798774")
             @RequestHeader String token,
             @Parameter(name = "challengeId", description = "Challenge ID", required = true, example = "123456")
             @RequestParam Long challengeId) {
-
         User user = authService.getUserByToken(token);
         if (user == null) {
             return ResponseEntity.status(403).body("Invalid Token");
@@ -176,7 +174,7 @@ public class ChallengesController {
             }
     )
     @GetMapping("/accepted")
-    public ResponseEntity<List<ChallengeDTO>> queryAcceptedChallenges(
+    public ResponseEntity<List<AcceptedChallengeDTO>> queryAcceptedChallenges(
             @Parameter(description = "Authorization token", required = true, example = "172778789774")
             @RequestHeader String token) {
         try {
@@ -185,15 +183,19 @@ public class ChallengesController {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
 
-            List<Challenge> acceptedChallenges = challengesService.queryAcceptedChallenges(user);
+//            List<Challenge> acceptedChallenges = challengesService.queryAcceptedChallenges(user);
+            List<Object> challengesAndCompletions = challengesService.queryAcceptedChallenges(user);
+            List<Challenge> acceptedChallenges = (List<Challenge>) challengesAndCompletions.get(0);
+            List<Double> completionRates = (List<Double>) challengesAndCompletions.get(1);
+
             if (acceptedChallenges.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            List<ChallengeDTO> challengeDtos = new ArrayList<>();
+            List<AcceptedChallengeDTO> acceptedChallengeDtos = new ArrayList<>();
             for (Challenge challenge : acceptedChallenges) {
-                challengeDtos.add(challengeToDTO(challenge));
+                acceptedChallengeDtos.add(challengeToAcceptedChallengeDTO(challenge, completionRates.get(acceptedChallenges.indexOf(challenge))));
             }
-            return new ResponseEntity<>(challengeDtos, HttpStatus.OK);
+            return new ResponseEntity<>(acceptedChallengeDtos, HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -207,6 +209,15 @@ public class ChallengesController {
                 challenge.getStartDate(), challenge.getEndDate(),
                 challenge.getTargetDistance(), challenge.getTargetTime(),
                 challenge.getSport().toString(), challenge.getUser().getEmail());
+    }
+
+    public AcceptedChallengeDTO challengeToAcceptedChallengeDTO(Challenge challenge, double completionRate) {
+        return new AcceptedChallengeDTO(
+                challenge.getChallengeId(), challenge.getName(),
+                challenge.getStartDate(), challenge.getEndDate(),
+                challenge.getTargetDistance(), challenge.getTargetTime(),
+                challenge.getSport().toString(), challenge.getUser().getEmail(),
+                completionRate);
     }
 
 

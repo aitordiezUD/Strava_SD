@@ -1,6 +1,7 @@
 package Strava.service;
 
 import Strava.dao.ChallengeRepository;
+import Strava.dao.SessionRepository;
 import Strava.dao.UserRepository;
 import Strava.entity.Challenge;
 import Strava.entity.Session;
@@ -17,11 +18,13 @@ import java.util.List;
 public class ChallengesService {
 
     private final ChallengeRepository challengeRepository;
-    private final UserRepository userRepository;  // Añadir el UserRepository
+    private final UserRepository userRepository;
+    private final SessionRepository sessionRepository;
 
-    public ChallengesService(ChallengeRepository challengeRepository, UserRepository userRepository) {
+    public ChallengesService(ChallengeRepository challengeRepository, UserRepository userRepository, SessionRepository sessionRepository) {
         this.challengeRepository = challengeRepository;
         this.userRepository = userRepository;
+        this.sessionRepository = sessionRepository;
     }
 
     // Method to create a new challenge
@@ -77,13 +80,36 @@ public class ChallengesService {
 
 
     // Method to query accepted challenges that haven't finished yet
-    public ArrayList<Challenge> queryAcceptedChallenges(User user) {
+    public List<Object> queryAcceptedChallenges(User user) {
         // Logic to query accepted challenges
-//        List<Challenge> acceptedChallenges = new ArrayList<>(user.getChallenges());
-//        acceptedChallenges.removeIf(challenge -> challenge.getEndDate().isBefore(LocalDate.now()));
-//        return new ArrayList<>(acceptedChallenges);
-        return (ArrayList<Challenge>) userRepository.findParticipatingChallengesByUserIdAndEndDate(user.getId(), LocalDate.now());
+        List<Object> result = new ArrayList<>();
+        List<Challenge> acceptedChallenges = userRepository.findParticipatingChallengesByUserIdAndEndDate(user.getId(), LocalDate.now());
+        List<Double> completionRates = new ArrayList<>();
+        for (Challenge challenge : acceptedChallenges) {
+            completionRates.add(calculateCompletionRate(challenge));
+        }
+        result.add(acceptedChallenges);
+        result.add(completionRates);
+        return result;
     }
+
+    private double calculateCompletionRate(Challenge challenge) {
+        User user = challenge.getUser();
+        List<Session> sessions = sessionRepository.findByUserAndStartDateBetween(user, challenge.getStartDate(), challenge.getEndDate());
+        double totalDistance = 0.0;
+        double totalTime = 0.0;
+        for (Session session : sessions) {
+            totalDistance += session.getDistance();
+            totalTime += session.getDuration();
+        }
+        double targetDistance = challenge.getTargetDistance();
+        double targetTime = challenge.getTargetTime();
+        double distanceRate = totalDistance / targetDistance;
+        double timeRate = totalTime / targetTime;
+        double completionRate = ((distanceRate + timeRate) / 2)*100;
+        return  (completionRate > 100) ? 100 : completionRate;
+    }
+
 
 
     // Method to add challenge to the repository

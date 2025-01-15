@@ -54,7 +54,6 @@ public class User {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Challenge> challenges = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Session> sessions = new ArrayList<>();
 
@@ -167,6 +166,14 @@ public class User {
 
     public List<Challenge> getParticipatingChallenges() {
         return participatingChallenges;
+    }
+
+    public List<Session> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(List<Session> sessions) {
+        this.sessions = sessions;
     }
 
     @Override

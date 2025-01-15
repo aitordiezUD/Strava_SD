@@ -4,10 +4,7 @@ import Strava.dto.RegisterRequestDTO;
 import Strava.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,7 +30,6 @@ public class AuthController {
                     @ApiResponse(responseCode = "401", description = "Unauthorized: Invalid credentials, login failed"),
             }
     )
-
     @PostMapping("/login")
     public ResponseEntity<String> login(
             @Parameter(name="credentials", description="User's login credentials", required = true)
@@ -54,14 +50,14 @@ public class AuthController {
             description = "Allows the user to logout from the system by providing the authorization token.",
             responses =
                     {
-                            @ApiResponse(responseCode = "204", description = "No content logout successful"),
-                            @ApiResponse(responseCode = "401", description = "Unauthorized logout")
+                        @ApiResponse(responseCode = "204", description = "No content logout successful"),
+                        @ApiResponse(responseCode = "401", description = "Unauthorized logout")
                     }
     )
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
             @Parameter(name = "token", description = "authorization token")
-            @RequestBody String token
+            @RequestHeader String token
     ){
         Optional<Boolean> result = authService.logout(token);
         if (result.isPresent() && result.get()) {
@@ -70,6 +66,8 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
+
+
     //Register endpoint
     @Operation(
             summary = "Register in the system",
