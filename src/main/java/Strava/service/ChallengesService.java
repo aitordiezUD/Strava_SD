@@ -7,6 +7,8 @@ import Strava.entity.Challenge;
 import Strava.entity.Session;
 import Strava.entity.SportType;
 import Strava.entity.User;
+import Strava.externals.EmailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,9 @@ public class ChallengesService {
     private final ChallengeRepository challengeRepository;
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     public ChallengesService(ChallengeRepository challengeRepository, UserRepository userRepository, SessionRepository sessionRepository) {
         this.challengeRepository = challengeRepository;
@@ -77,8 +82,6 @@ public class ChallengesService {
 
     }
 
-
-
     // Method to query accepted challenges that haven't finished yet
     public List<Object> queryAcceptedChallenges(User user) {
         // Logic to query accepted challenges
@@ -86,15 +89,14 @@ public class ChallengesService {
         List<Challenge> acceptedChallenges = userRepository.findParticipatingChallengesByUserIdAndEndDate(user.getId(), LocalDate.now());
         List<Double> completionRates = new ArrayList<>();
         for (Challenge challenge : acceptedChallenges) {
-            completionRates.add(calculateCompletionRate(challenge));
+            completionRates.add(calculateCompletionRate(challenge,user));
         }
         result.add(acceptedChallenges);
         result.add(completionRates);
         return result;
     }
 
-    private double calculateCompletionRate(Challenge challenge) {
-        User user = challenge.getUser();
+    private double calculateCompletionRate(Challenge challenge,User user) {
         List<Session> sessions = sessionRepository.findByUserAndStartDateBetween(user, challenge.getStartDate(), challenge.getEndDate());
         double totalDistance = 0.0;
         double totalTime = 0.0;
@@ -122,6 +124,7 @@ public class ChallengesService {
 
     private void sendConfirmationEmail(User user, Challenge challenge) {
         // Logic to send email to user about the created challenge
+        emailService.sendChallengeCreationMessage(user, challenge);
     }
     
     //Method to find challenges by id 

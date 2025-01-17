@@ -1,4 +1,5 @@
 package Strava.facade;
+import Strava.dto.SessionCreationDTO;
 import Strava.entity.Session;
 import Strava.entity.User;
 import Strava.service.AuthService;
@@ -86,9 +87,9 @@ public class SessionsController {
 
     @PostMapping
     public  ResponseEntity<Void> createSession(
-        @Parameter(name = "session", description = "Session data", required = true)
-        @RequestBody SessionDTO sessionDTO,
-        @Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
+            @Parameter(name = "session", description = "Session data", required = true)
+        @RequestBody SessionCreationDTO sessionDTO,
+            @Parameter(name = "token", description = "Authorization token", required = true, example = "1727786726773")
         @RequestHeader String token) {
         try {
             User user = authService.getUserByToken(token);
